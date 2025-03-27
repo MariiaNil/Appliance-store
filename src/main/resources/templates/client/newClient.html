@@ -27,7 +27,7 @@
     <p>
         <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:text="#{user.password.is.correctly}">Invalid password</p>
         <span th:text="#{object.user.password}"></span>
-        <input type="text" th:field="*{password}"/>
+        <input type="password" th:field="*{password}"/>
     </p>
     <p>
         <p th:if="${#fields.hasErrors('card')}" class="text-danger">Invalid card</p>

@@ -15,7 +15,7 @@
 <form action="#" th:action="@{add-employee}" th:object="${employee}" method="post">
     <p><span th:text="#{object.user.name}"></span> <input type="text" th:field="*{name}"/></p>
     <p><span th:text="#{object.user.email}"></span> <input type="text" th:field="*{email}"/></p>
-    <p><span th:text="#{object.user.password}"></span> <input type="text" th:field="*{password}"/></p>
+    <p><span th:text="#{object.user.password}"></span> <input type="password" th:field="*{password}"/></p>
     <p><span th:text="#{object.employee.department}"></span> <input type="text" th:field="*{department}"/></p>
     <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
 </form>

@@ -34,10 +34,11 @@
             <td th:text="${employee.department}"/>
             <td>
                 <div>
-                    <a th:href="@{employees/}+${employee.id}+@{/delete}">
-                    <span class="icon">
-                          <i class="fa fa-minus"></i>
-                    </span>
+                    <a th:href="@{'/employees/' + ${employee.id} + '/delete'}">
+                    <!--span class="icon">
+                          <i class="fa fa-minus">DELETE</i>
+                    </span>-->
+                        <button type="submit" class="btn btn-danger">DELETE</button>
                     </a>
                 </div>
             </td>

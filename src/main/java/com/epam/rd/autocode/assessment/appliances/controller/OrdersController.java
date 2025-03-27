@@ -1,5 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.controller;
 
+import com.epam.rd.autocode.assessment.appliances.dto.OrdersDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Orders;
 import com.epam.rd.autocode.assessment.appliances.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class OrdersController {
 
     @GetMapping
     public String listOrders(Model model) {
-        List<Orders> ordersList = orderService.getAllOrders();
+        List<OrdersDTO> ordersList = orderService.getAllOrders();
         model.addAttribute("orders", ordersList);
         return "order/orders";
     }

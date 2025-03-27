@@ -1,5 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.controller;
 
+import com.epam.rd.autocode.assessment.appliances.dto.ClientDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class ClientController {
 
     @GetMapping
     public String listClients(Model model) {
-        List<Client> clientList = clientService.getClients();
+        List<ClientDTO> clientList = clientService.getClients();
         model.addAttribute("clients", clientList);
         return "client/clients";
     }

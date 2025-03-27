@@ -1,6 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.controller;
 
 
+import com.epam.rd.autocode.assessment.appliances.dto.ApplianceDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.model.Category;
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
@@ -27,7 +28,7 @@ public class ApplianceController {
 
     @GetMapping
     public String listAppliances(Model model) {
-        List<Appliance> applianceList = applianceService.getAppliances();
+        List<ApplianceDTO> applianceList = applianceService.getAppliances();
         model.addAttribute("appliances", applianceList);
         return "appliance/appliances";
     }

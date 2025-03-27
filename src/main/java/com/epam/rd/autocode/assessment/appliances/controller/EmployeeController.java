@@ -1,10 +1,9 @@
 package com.epam.rd.autocode.assessment.appliances.controller;
 
-import com.epam.rd.autocode.assessment.appliances.mapper.EmployeeMapper;
+import com.epam.rd.autocode.assessment.appliances.dto.EmployeeDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,7 @@ public class EmployeeController {
 
     @GetMapping
     public String listEmployees(Model model) {
-        List<Employee> employeeList = employeeService.getEmployees();
+        List<EmployeeDTO> employeeList = employeeService.getEmployees();
         model.addAttribute("employees", employeeList);
         return "employee/employees";
     }

@@ -8,12 +8,14 @@ import lombok.*;
 @Table(name = "employee")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Employee extends User{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @NotBlank
     @Column(name = "department", nullable = false)
     private String department;
+
+    public Employee(Long id, String name, String email, String password, String department) {
+        super(id, name, email, password);
+        this.department = department;
+    }
+
 }

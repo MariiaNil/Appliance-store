@@ -1,13 +1,19 @@
 package com.epam.rd.autocode.assessment.appliances.service;
 
+import com.epam.rd.autocode.assessment.appliances.dto.ManufacturerDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ManufacturerService {
-    public List<Manufacturer> getManufacturers();
-    public Manufacturer createManufacturer(Manufacturer manufacturer);
-    public Manufacturer getManufacturerById(Long id);
-    public Manufacturer updateManufacturer(Long id, Manufacturer manufacturer);
-    public void deleteManufacturer(Long id);
+    Page<ManufacturerDTO> getAllManufacturers(Pageable pageable);
+    List<ManufacturerDTO> getManufacturers();
+    Manufacturer createManufacturer(Manufacturer manufacturer);
+    ManufacturerDTO getManufacturerById(Long id);
+    ManufacturerDTO updateManufacturer(Long id, ManufacturerDTO manufacturerDto);
+    void deleteManufacturer(Long id);
+
+    Page<ManufacturerDTO> searchManufacturers(String search, Pageable pageable);
 }

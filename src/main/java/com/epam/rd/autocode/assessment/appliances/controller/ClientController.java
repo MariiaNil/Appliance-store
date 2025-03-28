@@ -4,15 +4,14 @@ import com.epam.rd.autocode.assessment.appliances.dto.ClientDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Controller
 @RequestMapping("/clients")
@@ -22,9 +21,17 @@ public class ClientController {
     private final ClientService clientService;
 
     @GetMapping
-    public String listClients(Model model) {
-        List<ClientDTO> clientList = clientService.getClients();
-        model.addAttribute("clients", clientList);
+    public String listClients(
+            Model model,
+            @RequestParam(value = "search", required = false) String search,
+            @PageableDefault(size = 5, sort = {"id", "name", "email", "card"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<ClientDTO> clientsPage;
+        if (search != null && !search.trim().isEmpty())
+            clientsPage = clientService.searchClients(search, pageable);
+        else
+            clientsPage = clientService.getClients(pageable);
+        model.addAttribute("clientsPage", clientsPage);
+        model.addAttribute("search", search);
         return "client/clients";
     }
 

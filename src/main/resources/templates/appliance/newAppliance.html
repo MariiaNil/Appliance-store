@@ -39,8 +39,8 @@
     <span th:text="#{object.appliance.manufacturer}"></span>
 
     <select th:field="*{manufacturer}">
-        <option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer.getId()}"
-                th:text="${manufacturer.getName()}"></option>
+        <option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer.id()}"
+                th:text="${manufacturer.name()}"></option>
     </select>
     </p>
     <p>

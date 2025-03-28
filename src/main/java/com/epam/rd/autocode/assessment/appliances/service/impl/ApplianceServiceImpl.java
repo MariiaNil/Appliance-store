@@ -6,9 +6,10 @@ import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.repository.ApplianceRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,11 +19,9 @@ public class ApplianceServiceImpl implements ApplianceService {
     private final ApplianceDTOMapper applianceDTOMapper;
 
     @Override
-    public List<ApplianceDTO> getAppliances() {
-        return applianceRepository.findAll()
-                .stream()
-                .map(applianceDTOMapper)
-                .toList();
+    public Page<ApplianceDTO> getAppliances(Pageable pageable) {
+        Page<Appliance> appliancePage = applianceRepository.findAll(pageable);
+        return appliancePage.map(applianceDTOMapper);
     }
 
     @Override
@@ -45,5 +44,11 @@ public class ApplianceServiceImpl implements ApplianceService {
     @Override
     public void deleteAppliance(Long id) {
         applianceRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<ApplianceDTO> searchAppliances(String search, Pageable pageable) {
+        return applianceRepository.findByNameContainingIgnoreCase(search, pageable)
+                .map(applianceDTOMapper);
     }
 }

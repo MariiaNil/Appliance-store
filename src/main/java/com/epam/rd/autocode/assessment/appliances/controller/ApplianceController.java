@@ -10,11 +10,16 @@ import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import com.epam.rd.autocode.assessment.appliances.service.ManufacturerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -27,9 +32,15 @@ public class ApplianceController {
     private final ManufacturerService manufacturerService;
 
     @GetMapping
-    public String listAppliances(Model model) {
-        List<ApplianceDTO> applianceList = applianceService.getAppliances();
-        model.addAttribute("appliances", applianceList);
+    public String listAppliances(
+            Model model,
+            @RequestParam(value = "search", required = false) String search,
+            @PageableDefault(size = 5, sort = {"id", "name", "category", "model", "manufacturer", "powerType", "power", "price"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<ApplianceDTO> appliancesPage = (search != null && !search.trim().isEmpty())
+                ? applianceService.searchAppliances(search, pageable)
+                : applianceService.getAppliances(pageable);
+        model.addAttribute("appliancesPage", appliancesPage);
+        model.addAttribute("search", search);
         return "appliance/appliances";
     }
 

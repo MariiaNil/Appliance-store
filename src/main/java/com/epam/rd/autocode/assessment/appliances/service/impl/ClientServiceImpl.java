@@ -6,9 +6,10 @@ import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +32,9 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<ClientDTO> getClients() {
-        return clientRepository.findAll()
-                .stream()
-                .map(clientDTOMapper)
-                .toList();
+    public Page<ClientDTO> getClients(Pageable pageable) {
+        Page<Client> clientPage = clientRepository.findAll(pageable);
+        return clientPage.map(clientDTOMapper);
     }
 
     @Override
@@ -46,5 +45,11 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void deleteClient(Long id) {
         clientRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<ClientDTO> searchClients(String search, Pageable pageable) {
+        return clientRepository.findByNameContainingIgnoreCase(search, pageable)
+                .map(clientDTOMapper);
     }
 }

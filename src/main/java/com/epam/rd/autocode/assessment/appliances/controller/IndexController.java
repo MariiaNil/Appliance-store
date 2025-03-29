@@ -2,7 +2,6 @@ package com.epam.rd.autocode.assessment.appliances.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +13,7 @@ import java.util.Locale;
 
 @Controller
 @RequestMapping("/")
-@RequiredArgsConstructor
 public class IndexController {
-
-    private final MessageSource messageSource;
 
     @GetMapping
     public String index(Model model) {

@@ -9,6 +9,7 @@ import com.epam.rd.autocode.assessment.appliances.repository.OrdersRepository;
 import com.epam.rd.autocode.assessment.appliances.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Orders createOrder(Orders orders) {
         return ordersRepository.save(orders);
     }

@@ -15,4 +15,5 @@ public interface ClientService {
     void deleteClient(Long id);
 
     Page<ClientDTO> searchClients(String search, Pageable pageable);
+    void hashExistingPasswords();
 }

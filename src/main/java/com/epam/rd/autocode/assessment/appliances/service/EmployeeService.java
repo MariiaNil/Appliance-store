@@ -13,4 +13,6 @@ public interface EmployeeService {
     Page<EmployeeDTO> getEmployees(Pageable pageable);
     void deleteEmployee(Long id);
     Page<EmployeeDTO> searchEmployees(String search, Pageable pageable);
+
+    void hashExistingPasswords();
 }

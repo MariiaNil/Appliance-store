@@ -30,8 +30,8 @@
         <thead>
         <tr class="table-dark">
             <th>
-                <a th:href="@{/appliances.html(page=${appliancesPage.number}, size=${appliancesPage.size}, sort='id,asc', search=${search})}"
-                   th:text="#{object.appliance.id}">ID</a>
+                <a th:href="@{/appliances(page=${appliancesPage.number}, size=${appliancesPage.size}, sort=${'id,asc'}, search=${search})}" th:text="#{object.appliance.id}">ID</a>
+
             </th>
             <th>
                 <a th:href="@{/appliances(page=${appliancesPage.number}, size=${appliancesPage.size}, sort='name,asc', search=${search})}"
@@ -86,23 +86,16 @@
     <div th:if="${appliancesPage != null}">
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${appliancesPage.first} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/appliances(page=${appliancesPage.number - 1}, size=${appliancesPage.size})}"
-                   aria-label="Previous">
+            <li class="page-item" th:classappend="${appliancesPage.hasPrevious()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/appliances(page=${appliancesPage.number - 1}, size=${appliancesPage.size}, search=${search})}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, appliancesPage.totalPages - 1)}"
-                th:classappend="${appliancesPage.number == i} ? 'active'">
-                <a class="page-link"
-                   th:href="@{/appliances(page=${i}, size=${appliancesPage.size}, search=${search})}"
-                   th:text="${i + 1}">1</a>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, appliancesPage.totalPages - 1)}" th:classappend="${appliancesPage.number == i} ? 'active'">
+                <a class="page-link" th:href="@{/appliances(page=${i}, size=${appliancesPage.size}, search=${search})}" th:text="${i + 1}">1</a>
             </li>
-            <li class="page-item" th:classappend="${appliancesPage.last} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/appliances(page=${appliancesPage.number + 1}, size=${appliancesPage.size}, search=${search})}"
-                   aria-label="Next">
+            <li class="page-item" th:classappend="${appliancesPage.hasNext()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/appliances(page=${appliancesPage.number + 1}, size=${appliancesPage.size}, search=${search})}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

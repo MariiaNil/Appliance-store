@@ -22,6 +22,19 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/orders}" th:text="#{order.menu.name}"></a>
                     </li>
+                    <!-- Выпадающий список для смены языка -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span th:text="#{lang.select}">Language</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- Ссылка для смены языка на английский -->
+                            <li><a class="dropdown-item" th:href="@{/change-lang?lang=en}">English</a></li>
+                            <!-- Ссылка для смены языка на французский -->
+                            <li><a class="dropdown-item" th:href="@{/change-lang?lang=uk}">Ukraine</a></li>
+                            <!-- Добавьте другие языки, если нужно -->
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

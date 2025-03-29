@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    Client findByEmail(String email);
     Page<Client> findAll(Pageable pageable);
     Page<Client> findByNameContainingIgnoreCase(String search, Pageable pageable);
 }

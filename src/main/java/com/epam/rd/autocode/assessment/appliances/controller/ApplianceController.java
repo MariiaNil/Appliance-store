@@ -36,9 +36,11 @@ public class ApplianceController {
             Model model,
             @RequestParam(value = "search", required = false) String search,
             @PageableDefault(size = 5, sort = {"id", "name", "category", "model", "manufacturer", "powerType", "power", "price"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<ApplianceDTO> appliancesPage = (search != null && !search.trim().isEmpty())
-                ? applianceService.searchAppliances(search, pageable)
-                : applianceService.getAppliances(pageable);
+        Page<ApplianceDTO> appliancesPage;
+        if (search != null && !search.trim().isEmpty())
+            appliancesPage = applianceService.searchAppliances(search, pageable);
+        else
+            appliancesPage = applianceService.getAppliances(pageable);
         model.addAttribute("appliancesPage", appliancesPage);
         model.addAttribute("search", search);
         return "appliance/appliances";

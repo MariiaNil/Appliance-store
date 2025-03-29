@@ -7,8 +7,14 @@ import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -17,10 +23,13 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
     private final ClientDTOMapper clientDTOMapper;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
+    @Transactional
     public Client createClient(Client client) {
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
         return clientRepository.save(client);
     }
 
@@ -51,5 +60,27 @@ public class ClientServiceImpl implements ClientService {
     public Page<ClientDTO> searchClients(String search, Pageable pageable) {
         return clientRepository.findByNameContainingIgnoreCase(search, pageable)
                 .map(clientDTOMapper);
+    }
+
+    @Override
+    @Transactional
+    public void hashExistingPasswords() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Client> clientPage;
+
+        do {
+            clientPage = clientRepository.findAll(pageable);
+            List<Client> clientsToUpdate = new ArrayList<>();
+            for (Client client : clientPage.getContent()) {
+                String rawPassword = client.getPassword();
+                if (!rawPassword.startsWith("$2a$") && !rawPassword.startsWith("$2b$")) {
+                    String hashedPassword = passwordEncoder.encode(rawPassword);
+                    client.setPassword(hashedPassword);
+                    clientsToUpdate.add(client);
+                }
+            }
+            clientRepository.saveAll(clientsToUpdate);
+            pageable = pageable.next();
+        } while (clientPage.hasNext());
     }
 }

@@ -15,7 +15,7 @@ public class ApplianceDTOMapper implements Function<Appliance, ApplianceDTO> {
                 appliance.getName(),
                 appliance.getCategory(),
                 appliance.getModel(),
-                appliance.getManufacturer(),
+                new ManufacturerDTOMapper().apply(appliance.getManufacturer()),
                 appliance.getPowerType(),
                 appliance.getCharacteristic(),
                 appliance.getDescription(),

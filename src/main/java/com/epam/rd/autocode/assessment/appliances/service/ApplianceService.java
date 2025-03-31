@@ -13,5 +13,6 @@ public interface ApplianceService {
     ApplianceDTO updateAppliance(Long id,ApplianceDTO applianceDto);
     void deleteAppliance(Long id);
 
+
     Page<ApplianceDTO> searchAppliances(String search, Pageable pageable);
 }

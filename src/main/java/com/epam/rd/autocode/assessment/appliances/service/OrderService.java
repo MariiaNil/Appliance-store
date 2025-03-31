@@ -1,17 +1,21 @@
 package com.epam.rd.autocode.assessment.appliances.service;
 
 import com.epam.rd.autocode.assessment.appliances.dto.OrdersDTO;
-import com.epam.rd.autocode.assessment.appliances.model.OrderRow;
 import com.epam.rd.autocode.assessment.appliances.model.Orders;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
 
 public interface OrderService {
-    List<OrdersDTO> getAllOrders();
+    Page<OrdersDTO> getAllOrders(Pageable pageable);
+    Page<OrdersDTO> searchOrders(String search, Pageable pageable);
+
     Orders createOrder(Orders orders);
-    Optional<OrdersDTO> getOrderById(Long id);
+    OrdersDTO getOrderById(Long id);
     OrdersDTO updateOrder(Long id, OrdersDTO ordersDto);
     void deleteOrder(Long id);
-    Orders addOrderRow(Long id, OrderRow orderRow);
+
+    OrdersDTO approvedOrder(Long id, boolean approved);
+    OrdersDTO addApplianceToOrder(Long ordersId, Long applianceId, Long numbers, BigDecimal price);
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    Employee findByEmail(String email);
     Page<Employee> findAll(Pageable pageable);
     Page<Employee> findByNameContainingIgnoreCase(String search, Pageable pageable);
 }

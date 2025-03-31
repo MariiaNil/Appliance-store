@@ -11,7 +11,7 @@ public record ApplianceDTO(
         String name,
         Category category,
         String model,
-        Manufacturer manufacturer,
+        ManufacturerDTO manufacturer,
         PowerType powerType,
         String characteristic,
         String description,

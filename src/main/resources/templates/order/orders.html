@@ -1,77 +1,119 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <!-- Latest compiled and minified CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Latest compiled JavaScript -->
+    <meta charset="UTF-8" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link th:href="@{/styles/css/main.css}" rel="stylesheet"/>
-    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link th:href="@{/styles/css/main.css}" rel="stylesheet" />
+    <title>Orders List</title>
 </head>
 <body>
 <header>
     <div th:insert="~{menunavy::navy}"></div>
 </header>
-<main>
+<main class="container mt-3">
     <h1 th:text="#{orders.header.list}">Orders list</h1>
+
+    <!-- Форма поиска -->
+    <form th:action="@{/orders}" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search orders..." th:value="${search}" />
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <!-- Таблица заказов с сортировкой -->
     <table class="table table-hover">
         <thead>
         <tr class="table-dark">
-            <th>ID</th>
-            <th>Client</th>
-            <th>Employee</th>
+            <!-- Сортировка по ID -->
+            <th>
+                <a th:href="@{/orders(page=${ordersPage.number}, size=${ordersPage.size}, search=${search}, sort='id,asc')}" th:text="#{object.order.id}">ID</a>
+            </th>
+            <!-- Сортировка по клиенту (например, по имени клиента) -->
+            <th>
+                <a th:href="@{/orders(page=${ordersPage.number}, search=${search}, size=${ordersPage.size}, sort='client.name,asc')}"
+                   th:text="#{object.order.client}">Client</a>
+            </th>
+            <!-- Сортировка по сотруднику -->
+            <th>
+                <a th:href="@{/orders(page=${ordersPage.number}, search=${search}, size=${ordersPage.size}, sort='employee.name,asc')}"
+                   th:text="#{object.order.employee}">Employee</a>
+            </th>
             <th>Approved</th>
-            <th>Amount</th>
+            <th>
+                <a th:href="@{/orders(page=${ordersPage.number}, search=${search}, size=${ordersPage.size}, sort='totalAmount,asc')}"
+                   th:text="#{object.order.Amount}">Amount</a>
+            </th>
             <th>Operation</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="order: ${orders}">
-            <td><span class="float-end" th:text="${order.id}"/></td>
-            <td><span class="float-end" th:text="${order.client}"/></td>
-            <td><span class="float-end" th:text="${order.employee}"/></td>
+        <tr th:each="order : ${ordersPage.content}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.client.name() + ' ' + order.client.email() + ' ' + order.client.card()}"></td>
+            <td th:text="${order.employee.name() + ' ' + order.employee.email() + ' ' + order.employee.department()}"></td>
             <td>
                 <div th:if="${order.approved}">
-                    <a th:href="@{orders/}+${order.id}+@{/unapproved}">
-                      <span class="icon">
+                    <a th:href="@{'/orders/' + ${order.id} + '/unapproved'}">
                         <i class="fa fa-check"></i>
-                      </span>
-
                     </a>
                 </div>
-                <!-- ELSE -->
                 <div th:unless="${order.approved}">
-                    <a th:href="@{orders/}+${order.id}+@{/approved}">
-                    <span class="icon">
-                          <i class="fa fa-minus"></i>
-                    </span>
-
+                    <a th:href="@{'/orders/' + ${order.id} + '/approved'}">
+                        <i class="fa fa-minus"></i>
                     </a>
                 </div>
             </td>
-            <td><span class="float-end" th:text="${order.getAmount}"/></td>
+            <td th:text="${order.totalAmount()}"></td>
             <td>
                 <div>
-                    <a th:href="@{orders/}+${order.id}+@{/delete}">
+                    <a th:href="@{'/orders/' + ${order.id} + '/delete'}">
                         <i class="fa fa-times"></i>
                     </a>
                 </div>
                 <div>
-                    <a th:href="@{orders/}+${order.id}+@{/edit}">
+                    <a th:href="@{'/orders/' + ${order.id} + '/edit'}">
                         <i class="fa fa-edit"></i>
                     </a>
                 </div>
-
             </td>
         </tr>
         </tbody>
     </table>
-    <a th:href="@{orders/add}" class="btn btn-primary" th:text="#{orders.btn.new}"></a>
+
+    <!-- Пагинация -->
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${ordersPage.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/orders(page=${ordersPage.number - 1}, search=${search}, sort=${param.sort != null ? param.sort[0] : ''})}">
+                    Previous
+                </a>
+            </li>
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, ordersPage.totalPages - 1)}"
+                th:classappend="${i == ordersPage.number} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/orders(page=${i}, search=${search}, sort=${param.sort != null ? param.sort[0] : ''})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${ordersPage.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/orders(page=${ordersPage.number + 1}, search=${search}, sort=${param.sort != null ? param.sort[0] : ''})}">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <a th:href="@{/orders/add}" class="btn btn-primary" th:text="#{orders.btn.new}">New Order</a>
 </main>
-<div th:insert="~{footer::footer}"></div>
+<footer>
+    <div th:insert="~{footer::footer}"></div>
+</footer>
 </body>
 </html>

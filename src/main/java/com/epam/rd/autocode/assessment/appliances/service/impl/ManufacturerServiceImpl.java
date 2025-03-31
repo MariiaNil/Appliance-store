@@ -6,13 +6,11 @@ import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
 import com.epam.rd.autocode.assessment.appliances.repository.ManufacturerRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ManufacturerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,14 +23,6 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     public Page<ManufacturerDTO> getAllManufacturers(Pageable pageable) {
         Page<Manufacturer> manufacturerPage = manufacturerRepository.findAll(pageable);
         return manufacturerPage.map(manufacturerDTOMapper);
-    }
-
-    @Override
-    public List<ManufacturerDTO> getManufacturers() {
-        return manufacturerRepository.findAll()
-                .stream()
-                .map(manufacturerDTOMapper)
-                .toList();
     }
 
     @Override

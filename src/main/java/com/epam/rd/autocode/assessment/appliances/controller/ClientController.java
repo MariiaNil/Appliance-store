@@ -4,6 +4,8 @@ import com.epam.rd.autocode.assessment.appliances.dto.ClientDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ClientController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
     private final ClientService clientService;
 
     @GetMapping
@@ -32,24 +35,28 @@ public class ClientController {
             clientsPage = clientService.getClients(pageable);
         model.addAttribute("clientsPage", clientsPage);
         model.addAttribute("search", search);
+        logger.info("Clients list successfully loaded, returning view 'client/clients'");
         return "client/clients";
     }
 
     @GetMapping("/add")
     public String showAddClientForm(Model model) {
         model.addAttribute("client", new Client());
+        logger.info("Showing add client form");
         return "client/newClient";
     }
 
     @PostMapping("/add-client")
     public String addClient(Client client) {
         clientService.createClient(client);
+        logger.info("Client created successfully");
         return "redirect:/clients";
     }
 
     @GetMapping("/{id}/delete")
     public String deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);
+        logger.info("Client deleted successfully");
         return "redirect:/clients";
     }
 }

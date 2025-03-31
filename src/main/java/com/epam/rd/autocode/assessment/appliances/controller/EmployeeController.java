@@ -4,6 +4,8 @@ import com.epam.rd.autocode.assessment.appliances.dto.EmployeeDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EmployeeController {
 
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
     private final EmployeeService employeeService;
 
     @GetMapping
@@ -32,24 +35,28 @@ public class EmployeeController {
             employeePage = employeeService.getEmployees(pageable);
         model.addAttribute("employeePage", employeePage);
         model.addAttribute("search", search);
+        logger.info("Employees list successfully loaded, returning view 'employee/employees'");
         return "employee/employees";
     }
 
     @GetMapping("/add")
     public String showAddEmployeeForm(Model model) {
         model.addAttribute("employee", new Employee());
+        logger.info("Showing add employee form");
         return "employee/newEmployee";
     }
 
     @PostMapping("/add-employee")
     public String addEmployee(@ModelAttribute Employee employee) {
         employeeService.createEmployee(employee);
+        logger.info("Employee created successfully");
         return "redirect:/employees";
     }
 
     @GetMapping("/{id}/delete")
     public String deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
+        logger.info("Employee deleted successfully");
         return "redirect:/employees";
     }
 }

@@ -1,6 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ public class OrderRow {
     @ManyToOne
     @JoinColumn(name = "appliance_id")
     private Appliance appliance;
+    @NotNull(message = "Number is required")
     private Long number;
+    @NotNull(message = "Number is required")
     private BigDecimal amount;
 }

@@ -9,6 +9,8 @@ import com.epam.rd.autocode.assessment.appliances.model.PowerType;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import com.epam.rd.autocode.assessment.appliances.service.ManufacturerService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApplianceController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ApplianceController.class);
     private final ApplianceService applianceService;
     private final ManufacturerService manufacturerService;
 
@@ -43,6 +46,7 @@ public class ApplianceController {
             appliancesPage = applianceService.getAppliances(pageable);
         model.addAttribute("appliancesPage", appliancesPage);
         model.addAttribute("search", search);
+        logger.info("Appliances list successfully loaded, returning view 'appliance/appliances'");
         return "appliance/appliances";
     }
 
@@ -55,12 +59,14 @@ public class ApplianceController {
         model.addAttribute("powerTypes", PowerType.values());
         model.addAttribute("manufacturers", manufacturerDTO);
         model.addAttribute("appliance", new Appliance());
+        logger.info("Showing add appliance form");
         return "appliance/newAppliance";
     }
 
     @PostMapping("/add-appliance")
     public String addAppliance(Appliance appliance) {
         applianceService.createAppliance(appliance);
+        logger.info("Appliance created successfully");
         return "redirect:/appliances";
     }
 

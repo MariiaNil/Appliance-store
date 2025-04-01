@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,35 +24,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
     private final ClientRepository clientRepository;
     private final ClientDTOMapper clientDTOMapper;
-    private final PasswordEncoder passwordEncoder;
+    /*private final PasswordEncoder passwordEncoder;*/
 
 
     @Override
     @Transactional
     public Client createClient(Client client) {
-        client.setPassword(passwordEncoder.encode(client.getPassword()));
-        logger.info("Creating client: {}", client);
+        /*client.setPassword(passwordEncoder.encode(client.getPassword()));*/
         return clientRepository.save(client);
     }
 
     @Override
     public ClientDTO getClientById(Long id) {
-        logger.info("Getting client by ID: {}", id);
         return clientRepository.findById(id)
                 .map(clientDTOMapper)
-                .orElseThrow(() -> {
-                    logger.error("Client with ID {} not found", id);
-                    return new RuntimeException("Client not found");
-                });
+                .orElseThrow(() ->
+                     new RuntimeException("Client not found"));
     }
 
     @Override
     public Page<ClientDTO> getClients(Pageable pageable) {
         Page<Client> clientPage = clientRepository.findAll(pageable);
-        logger.info("Clients found: {}", clientPage.getTotalElements());
         return clientPage.map(clientDTOMapper);
     }
 
@@ -63,12 +58,10 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void deleteClient(Long id) {
         clientRepository.deleteById(id);
-        logger.info("Client with ID {} deleted", id);
     }
 
     @Override
     public List<ClientDTO> getAllClientsList() {
-        logger.info("Getting all clients");
         return clientRepository.findAll()
                 .stream()
                 .map(clientDTOMapper)
@@ -77,22 +70,19 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Page<ClientDTO> searchClients(String search, Pageable pageable) {
-        logger.info("Searching clients by name: {}", search);
         return clientRepository.findByNameContainingIgnoreCase(search, pageable)
                 .map(clientDTOMapper);
     }
 
-    @Override
+    /*@Override
     @Transactional
     public void hashExistingPasswords() {
-        logger.info("Hashing existing passwords");
         Pageable pageable = PageRequest.of(0, 5);
         Page<Client> clientPage;
 
         do {
             clientPage = clientRepository.findAll(pageable);
             List<Client> clientsToUpdate = new ArrayList<>();
-            logger.info("Updating {} clients", clientPage.getTotalElements());
             for (Client client : clientPage.getContent()) {
                 String rawPassword = client.getPassword();
                 if (!rawPassword.startsWith("$2a$") && !rawPassword.startsWith("$2b$")) {
@@ -104,5 +94,5 @@ public class ClientServiceImpl implements ClientService {
             clientRepository.saveAll(clientsToUpdate);
             pageable = pageable.next();
         } while (clientPage.hasNext());
-    }
+    }*/
 }

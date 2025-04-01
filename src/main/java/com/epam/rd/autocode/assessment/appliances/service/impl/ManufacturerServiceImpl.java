@@ -18,33 +18,27 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ManufacturerServiceImpl implements ManufacturerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ManufacturerServiceImpl.class);
     private final ManufacturerRepository manufacturerRepository;
     private final ManufacturerDTOMapper manufacturerDTOMapper;
 
     @Override
     public Page<ManufacturerDTO> getAllManufacturers(Pageable pageable) {
         Page<Manufacturer> manufacturerPage = manufacturerRepository.findAll(pageable);
-        logger.info("Manufacturers found: {}", manufacturerPage.getTotalElements());
         return manufacturerPage.map(manufacturerDTOMapper);
     }
 
     @Override
     @Transactional
     public Manufacturer createManufacturer(Manufacturer manufacturer) {
-        logger.info("Creating manufacturer: {}", manufacturer);
         return manufacturerRepository.save(manufacturer);
     }
 
     @Override
     public ManufacturerDTO getManufacturerById(Long id) {
-        logger.info("Getting manufacturer by ID: {}", id);
         return manufacturerRepository.findById(id)
                 .map(manufacturerDTOMapper)
-                .orElseThrow(() -> {
-                    logger.error("Manufacturer with ID {} not found", id);
-                    return new RuntimeException("Manufacturer not found");
-                });
+                .orElseThrow(() ->
+                   new RuntimeException("Manufacturer not found"));
     }
 
     @Override
@@ -55,12 +49,10 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     @Override
     public void deleteManufacturer(Long id) {
         manufacturerRepository.deleteById(id);
-        logger.info("Manufacturer with ID {} deleted", id);
     }
 
     @Override
     public Page<ManufacturerDTO> searchManufacturers(String search, Pageable pageable) {
-        logger.info("Searching manufacturers by name: {}", search);
         return manufacturerRepository.findByNameContainingIgnoreCase(search, pageable)
                 .map(manufacturerDTOMapper);
     }

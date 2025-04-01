@@ -20,33 +20,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApplianceServiceImpl implements ApplianceService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApplianceServiceImpl.class);
     private final ApplianceRepository applianceRepository;
     private final ApplianceDTOMapper applianceDTOMapper;
 
     @Override
     public Page<ApplianceDTO> getAppliances(Pageable pageable) {
         Page<Appliance> appliancePage = applianceRepository.findAll(pageable);
-        logger.info("Appliances found: {}", appliancePage.getTotalElements());
         return appliancePage.map(applianceDTOMapper);
     }
 
     @Override
     @Transactional
     public Appliance createAppliance(Appliance appliance) {
-        logger.info("Creating appliance: {}", appliance);
         return applianceRepository.save(appliance);
     }
 
     @Override
     public ApplianceDTO getApplianeById(Long id) {
-        logger.info("Getting appliance by ID: {}", id);
         return applianceRepository.findById(id)
                 .map(applianceDTOMapper)
-                .orElseThrow(() -> {
-                    logger.error("Appliance with ID {} not found", id);
-                    return new RuntimeException("Appliance not found");
-                });
+                .orElseThrow(() ->
+                    new RuntimeException("Appliance not found"));
 
     }
 
@@ -58,12 +52,10 @@ public class ApplianceServiceImpl implements ApplianceService {
     @Override
     public void deleteAppliance(Long id) {
         applianceRepository.deleteById(id);
-        logger.info("Appliance with ID {} deleted", id);
     }
 
     @Override
     public List<ApplianceDTO> getAllAppliancesList() {
-        logger.info("Getting all appliances");
         return applianceRepository.findAll()
                 .stream()
                 .map(applianceDTOMapper)
@@ -72,7 +64,6 @@ public class ApplianceServiceImpl implements ApplianceService {
 
     @Override
     public Page<ApplianceDTO> searchAppliances(String search, Pageable pageable) {
-        logger.info("Searching appliances by name: {}", search);
         return applianceRepository.findByNameContainingIgnoreCase(search, pageable)
                 .map(applianceDTOMapper);
     }

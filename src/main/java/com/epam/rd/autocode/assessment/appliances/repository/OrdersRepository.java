@@ -11,7 +11,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrdersRepository extends JpaRepository <Orders, Long> {
     Page<Orders> findAll(Pageable pageable);
+    Page<Orders> findAllByClient_Id(Long clientId, Pageable pageable);
     Page<Orders> findByClient_NameContainingIgnoreCase(String search, Pageable pageable);
+    Page<Orders> findAllByClient_Id(Long clientId, String search, Pageable pageable);
+
+
     /*@Query("SELECT o FROM OrderRow o ORDER BY (o.amount * o.number) ASC")
     Page<Orders> findAllWithComputedTotalAmount(Pageable pageable);*/
 }

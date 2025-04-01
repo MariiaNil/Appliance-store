@@ -22,63 +22,53 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
     private final EmployeeRepository employeeRepository;
     private final EmployeeDTOMapper employeeDTOMapper;
-    private final PasswordEncoder passwordEncoder;
+    /*private final PasswordEncoder passwordEncoder;*/
 
     @Override
     @Transactional
     public Employee createEmployee(Employee employee) {
-        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
-        logger.info("Creating employee: {}", employee);
+        /*employee.setPassword(passwordEncoder.encode(employee.getPassword()));*/
         return employeeRepository.save(employee);
     }
 
     @Override
     public EmployeeDTO getEmployeeById(Long id) {
-        logger.info("Getting employee by ID: {}", id);
         return employeeRepository.findById(id)
                 .map(employeeDTOMapper)
-                .orElseThrow(() -> {
-                    logger.error("Employee with ID {} not found", id);
-                    return new RuntimeException("Employee not found");
-                });
+                .orElseThrow(() ->
+                        new RuntimeException("Employee not found"));
     }
 
     @Override
     public Page<EmployeeDTO> getEmployees(Pageable pageable) {
         Page<Employee> employeePage = employeeRepository.findAll(pageable);
-        logger.info("Employees found: {}", employeePage.getTotalElements());
         return employeePage.map(employeeDTOMapper);
     }
 
     @Override
     public void deleteEmployee(Long id) {
         employeeRepository.deleteById(id);
-        logger.info("Employee with ID {} deleted", id);
     }
 
     @Override
     public Page<EmployeeDTO> searchEmployees(String search, Pageable pageable) {
-        logger.info("Searching employees by name: {}", search);
         return employeeRepository.findByNameContainingIgnoreCase(search, pageable)
                 .map(employeeDTOMapper);
     }
 
     @Override
     public List<EmployeeDTO> getAllEmployeesList() {
-        logger.info("Getting all employees");
         return employeeRepository.findAll()
                 .stream()
                 .map(employeeDTOMapper)
                 .toList();
     }
 
-    @Override
+    /*@Override
     @Transactional
     public void hashExistingPasswords() {
-        logger.info("Hashing existing passwords");
         Pageable pageable = PageRequest.of(0, 5);
         Page<Employee> employeePage;
 
@@ -96,5 +86,5 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeRepository.saveAll(employeesToUpdate);
             pageable = pageable.next();
         } while (employeePage.hasNext());
-    }
+    }*/
 }

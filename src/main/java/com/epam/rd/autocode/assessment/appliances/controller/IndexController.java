@@ -1,5 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.controller;
 
+import com.epam.rd.autocode.assessment.appliances.model.Client;
+import com.epam.rd.autocode.assessment.appliances.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,7 +25,6 @@ public class IndexController {
     public String index(Model model) {
         String currentLanguage = LocaleContextHolder.getLocale().getLanguage();
         model.addAttribute("currentLanguage", currentLanguage);
-        logger.info("Current language: {}", currentLanguage);
         return "index";
     }
 
@@ -31,7 +32,12 @@ public class IndexController {
     public String changeLanguage(@RequestParam("lang") String lang, HttpServletRequest request) {
         Locale locale = new Locale(lang);
         LocaleContextHolder.setLocale(locale);
-        logger.info("Language changed to: {}", lang);
         return "redirect:/";
     }
+
+    /*@GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("user", new Client());
+        return "login";
+    }*/
 }

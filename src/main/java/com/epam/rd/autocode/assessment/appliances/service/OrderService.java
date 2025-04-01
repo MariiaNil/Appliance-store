@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 public interface OrderService {
     Page<OrdersDTO> getAllOrders(Pageable pageable);
     Page<OrdersDTO> searchOrders(String search, Pageable pageable);
+    Page<OrdersDTO> getOrdersByClientId(Long clientId, Pageable pageable);
+    Page<OrdersDTO> searchOrdersForUser(Long clientId, String search, Pageable pageable);
 
     Orders createOrder(Orders orders);
     OrdersDTO getOrderById(Long id);

@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,11 +30,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrdersController {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrdersController.class);
     private final OrderService orderService;
     private final ClientService clientService;
     private final EmployeeService employeeService;
     private final ApplianceService applianceService;
+
+
+/*    @GetMapping("/{id}/my-orders")
+    public String clientListOrders(
+            @PathVariable("id") Long id,
+            Model model,
+            @RequestParam(value = "search", required = false) String search,
+            @PageableDefault(size = 5, sort = {"id", "client", "employee"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<OrdersDTO> ordersPage;
+
+        if (search != null && !search.trim().isEmpty()) {
+            ordersPage = orderService.searchOrdersForUser(id, search, pageable);
+        } else {
+            ordersPage = orderService.getOrdersByClientId(id, pageable);
+        }
+
+        model.addAttribute("ordersPage", ordersPage);
+        model.addAttribute("search", search);
+        model.addAttribute("userId", id);
+
+        return "order/my-orders";
+    }*/
 
 
     @GetMapping
@@ -48,7 +70,6 @@ public class OrdersController {
             ordersPage = orderService.getAllOrders(pageable);
         model.addAttribute("ordersPage", ordersPage);
         model.addAttribute("search", search);
-        logger.info("Orders list successfully loaded, returning view 'order/orders'");
         return "order/orders";
     }
 
@@ -64,7 +85,6 @@ public class OrdersController {
         model.addAttribute("order", orders);
         model.addAttribute("clients", clientDTOS);
         model.addAttribute("employees", employeeDTOS);
-        logger.info("Showing edit order form");
         return "order/editOrder";
     }
 
@@ -73,44 +93,39 @@ public class OrdersController {
         OrdersDTO orders = orderService.getOrderById(id);
         model.addAttribute("appliances", applianceService.getAllAppliancesList());
         model.addAttribute("ordersId", orders.id());
-        logger.info("Showing choice appliance form");
         return "order/choiceAppliance";
     }
 
     @GetMapping("/{id}/delete")
     public String deleteOrder(@PathVariable("id") Long id) {
         orderService.deleteOrder(id);
-        logger.info("Order deleted successfully");
         return "redirect:/orders";
     }
 
+    @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping("/add")
     public String showAddOrders(Model model) {
         model.addAttribute("clients", clientService.getAllClientsList());
         model.addAttribute("employees", employeeService.getAllEmployeesList());
         model.addAttribute("order", new Orders());
-        logger.info("Showing add order form");
         return "order/newOrder";
     }
 
     @PostMapping("/add-order")
     public String createOrder(Orders orders) {
         orderService.createOrder(orders);
-        logger.info("Order created successfully");
         return "redirect:/orders";
     }
 
     @GetMapping("/{id}/approved")
     public String approvedOrder(@PathVariable("id") Long id) {
         orderService.approvedOrder(id, true);
-        logger.info("Order approved successfully");
         return "redirect:/orders";
     }
 
     @GetMapping("/{id}/unapproved")
     public String unapprovedOrder(@PathVariable("id") Long id) {
         orderService.approvedOrder(id, false);
-        logger.info("Order unapproved successfully");
         return "redirect:/orders";
     }
 
@@ -120,7 +135,6 @@ public class OrdersController {
                                @RequestParam("numbers") Long numbers,
                                @RequestParam("price") BigDecimal price) {
         orderService.addApplianceToOrder(ordersId, applianceId, numbers, price);
-        logger.info("Appliance added to order successfully");
         return "redirect:/orders";
     }
 }

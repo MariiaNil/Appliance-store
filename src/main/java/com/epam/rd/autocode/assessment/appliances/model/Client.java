@@ -17,4 +17,6 @@ public class Client extends User{
         super(id, name, email, password);
         this.card = card;
     }
+
+
 }

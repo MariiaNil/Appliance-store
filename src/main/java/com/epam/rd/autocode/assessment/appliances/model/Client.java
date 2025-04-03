@@ -9,8 +9,8 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 public class Client extends User{
-    @NotBlank
-    @Column(name = "card", unique = true, nullable = false)
+    /*@NotBlank*/
+    @Column(name = "card", unique = true)
     private String card;
 
     public Client(Long id, String name, String email, String password, String card) {

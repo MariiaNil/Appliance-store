@@ -1,4 +1,3 @@
-/*
 package com.epam.rd.autocode.assessment.appliances.config;
 
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
@@ -18,4 +17,3 @@ public class PasswordHashingRunner {
         };
     }
 }
-*/

@@ -24,12 +24,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeDTOMapper employeeDTOMapper;
-    /*private final PasswordEncoder passwordEncoder;*/
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public Employee createEmployee(Employee employee) {
-        /*employee.setPassword(passwordEncoder.encode(employee.getPassword()));*/
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }
 
@@ -66,7 +66,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .toList();
     }
 
-    /*@Override
+    @Override
     @Transactional
     public void hashExistingPasswords() {
         Pageable pageable = PageRequest.of(0, 5);
@@ -86,5 +86,5 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeRepository.saveAll(employeesToUpdate);
             pageable = pageable.next();
         } while (employeePage.hasNext());
-    }*/
+    }
 }

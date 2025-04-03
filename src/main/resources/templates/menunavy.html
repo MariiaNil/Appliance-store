@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <body>
 <div th:fragment="navy">
     <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
@@ -22,9 +22,26 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/orders}" th:text="#{order.menu.name}"></a>
                     </li>
-                    <!--<li class="nav-item">
-                        <a class="nav-link" th:href="@{/users/{id}/my-orders(id=${principal.id})}" th:text="#{my.orders}"></a>
-                    </li>-->
+
+                    <!-- Блок для неаутентифицированных пользователей -->
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <div class="d-flex">
+                            <a class="btn btn-outline-light me-2" th:href="@{/login}" th:text="#{login.button}"></a>
+                        </div>
+                    </li>
+
+                    <!-- Блок для аутентифицированных пользователей -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <div class="d-flex">
+                            <a class="btn btn-outline-light" th:href="@{/logout}" th:text="#{logout.button}"></a>
+                        </div>
+                    </li>
+
+                    <!--&lt;!&ndash; Блок кнопок для регистрации, входа и выхода &ndash;&gt;
+                    <li class="nav-item">
+                        <div class="d-flex">
+                            <a class="btn btn-outline-light me-2" th:href="@{/login}" th:text="#{login.button}">Вход</a>
+                            <a class="btn btn-outline-light" th:href="@{/logout}" th:text="#{logout.button}">Выход</a>-->
                     <!-- Выпадающий список для смены языка -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

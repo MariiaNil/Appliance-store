@@ -14,5 +14,5 @@ public interface EmployeeService {
     void deleteEmployee(Long id);
     Page<EmployeeDTO> searchEmployees(String search, Pageable pageable);
     List<EmployeeDTO> getAllEmployeesList();
-    /*void hashExistingPasswords();*/
+    void hashExistingPasswords();
 }

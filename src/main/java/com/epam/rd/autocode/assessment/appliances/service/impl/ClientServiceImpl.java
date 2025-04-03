@@ -26,13 +26,13 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
     private final ClientDTOMapper clientDTOMapper;
-    /*private final PasswordEncoder passwordEncoder;*/
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
     @Transactional
     public Client createClient(Client client) {
-        /*client.setPassword(passwordEncoder.encode(client.getPassword()));*/
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
         return clientRepository.save(client);
     }
 
@@ -74,7 +74,7 @@ public class ClientServiceImpl implements ClientService {
                 .map(clientDTOMapper);
     }
 
-    /*@Override
+    @Override
     @Transactional
     public void hashExistingPasswords() {
         Pageable pageable = PageRequest.of(0, 5);
@@ -94,5 +94,5 @@ public class ClientServiceImpl implements ClientService {
             clientRepository.saveAll(clientsToUpdate);
             pageable = pageable.next();
         } while (clientPage.hasNext());
-    }*/
+    }
 }

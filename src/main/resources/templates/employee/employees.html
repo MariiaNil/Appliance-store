@@ -11,89 +11,95 @@
     <title>Employees list</title>
 </head>
 <body>
-<div th:insert="~{menunavy::navy}"></div>
-<h1 th:text="#{employee.header.list}"></h1>
+<header>
+    <div th:insert="~{menunavy::navy}"></div>
+</header>
+<main class="container mt-3">
+    <h1 th:text="#{employee.header.list}"></h1>
 
-<!-- Форма поиска -->
-<form th:action="@{/employees}" method="get" class="mb-3">
-    <div class="input-group">
-        <input type="text" name="search" class="form-control"
-               placeholder="Search by name..."
-               th:value="${search}">
-        <button type="submit" class="btn btn-primary" th:text="#{employee.btn.search}">Search</button>
+    <!-- Форма поиска -->
+    <form th:action="@{/employees}" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control"
+                   placeholder="Search by name..."
+                   th:value="${search}">
+            <button type="submit" class="btn btn-primary" th:text="#{employee.btn.search}">Search</button>
+        </div>
+    </form>
+
+    <table class="table table-hover">
+        <thead>
+        <tr class="table-dark">
+            <!-- Ссылки для сортировки. Используем employeePage, а не employeesPage -->
+            <th>
+                <a th:href="@{/employees(page=${employeePage.number}, size=${employeePage.size}, sort='id,asc', search=${search})}"
+                   th:text="#{object.user.id}">ID</a>
+            </th>
+            <th>
+                <a th:href="@{/employees(page=${employeePage.number}, size=${employeePage.size}, sort='name,asc', search=${search})}"
+                   th:text="#{object.user.name}">Name</a>
+            </th>
+            <th>
+                <a th:href="@{/employees(page=${employeePage.number}, size=${employeePage.size}, sort='email,asc', search=${search})}"
+                   th:text="#{object.user.email}">Email</a>
+            </th>
+            <th th:text="#{object.user.password}"></th>
+            <th>
+                <a th:href="@{/employees(page=${employeePage.number}, size=${employeePage.size}, sort='department,asc', search=${search})}"
+                   th:text="#{object.employee.department}">Department</a>
+            </th>
+            <th>Operation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Итерируем по содержимому страницы -->
+        <tr th:each="employee : ${employeePage.content}">
+            <td th:text="${employee.id}"></td>
+            <td th:text="${employee.name}"></td>
+            <td th:text="${employee.email}"></td>
+            <td th:text="${employee.password}"></td>
+            <td th:text="${employee.department}"></td>
+            <td>
+                <a th:href="@{'/employees/' + ${employee.id} + '/delete'}">
+                    <button type="button" class="btn btn-danger">DELETE</button>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Пагинация -->
+    <div th:if="${employeePage != null}">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${employeePage.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/employees(page=${employeePage.number - 1}, size=${employeePage.size}, search=${search})}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, employeePage.totalPages - 1)}"
+                    th:classappend="${employeePage.number == i} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/employees(page=${i}, size=${employeePage.size}, search=${search})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${employeePage.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/employees(page=${employeePage.number + 1}, size=${employeePage.size}, search=${search})}"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
-</form>
 
-<table class="table table-hover">
-    <thead>
-    <tr class="table-dark">
-        <!-- Ссылки для сортировки. Используем employeePage, а не employeesPage -->
-        <th>
-            <a th:href="@{/employees(page=${employeePage.number}, size=${employeePage.size}, sort='id,asc', search=${search})}"
-               th:text="#{object.user.id}">ID</a>
-        </th>
-        <th>
-            <a th:href="@{/employees(page=${employeePage.number}, size=${employeePage.size}, sort='name,asc', search=${search})}"
-               th:text="#{object.user.name}">Name</a>
-        </th>
-        <th>
-            <a th:href="@{/employees(page=${employeePage.number}, size=${employeePage.size}, sort='email,asc', search=${search})}"
-               th:text="#{object.user.email}">Email</a>
-        </th>
-        <th th:text="#{object.user.password}"></th>
-        <th>
-            <a th:href="@{/employees(page=${employeePage.number}, size=${employeePage.size}, sort='department,asc', search=${search})}"
-               th:text="#{object.employee.department}">Department</a>
-        </th>
-        <th>Operation</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Итерируем по содержимому страницы -->
-    <tr th:each="employee : ${employeePage.content}">
-        <td th:text="${employee.id}"></td>
-        <td th:text="${employee.name}"></td>
-        <td th:text="${employee.email}"></td>
-        <td th:text="${employee.password}"></td>
-        <td th:text="${employee.department}"></td>
-        <td>
-            <a th:href="@{'/employees/' + ${employee.id} + '/delete'}">
-                <button type="button" class="btn btn-danger">DELETE</button>
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<!-- Пагинация -->
-<div th:if="${employeePage != null}">
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${employeePage.first} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/employees(page=${employeePage.number - 1}, size=${employeePage.size}, search=${search})}"
-                   aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, employeePage.totalPages - 1)}"
-                th:classappend="${employeePage.number == i} ? 'active'">
-                <a class="page-link"
-                   th:href="@{/employees(page=${i}, size=${employeePage.size}, search=${search})}"
-                   th:text="${i + 1}">1</a>
-            </li>
-            <li class="page-item" th:classappend="${employeePage.last} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/employees(page=${employeePage.number + 1}, size=${employeePage.size}, search=${search})}"
-                   aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>
-
-<a th:href="@{/employees/add}" class="btn btn-primary" th:text="#{employee.btn.new}">New employee</a>
-<div th:insert="~{footer::footer}"></div>
+    <a th:href="@{/employees/add}" class="btn btn-primary" th:text="#{employee.btn.new}">New employee</a>
+</main>
+<footer>
+    <div th:insert="~{footer::footer}"></div>
+</footer>
 </body>
 </html>

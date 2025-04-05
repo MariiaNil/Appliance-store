@@ -3,8 +3,10 @@ package com.epam.rd.autocode.assessment.appliances.service.impl;
 import com.epam.rd.autocode.assessment.appliances.dto.ClientDTO;
 import com.epam.rd.autocode.assessment.appliances.mapper.ClientDTOMapper;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
+import com.epam.rd.autocode.assessment.appliances.model.Orders;
 import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ import java.util.List;
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
+    private final EntityManager entityManager;
     private final ClientDTOMapper clientDTOMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -56,8 +59,21 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public void deleteClient(Long id) {
-        clientRepository.deleteById(id);
+        Client client = entityManager.find(Client.class, id);
+
+        List<Orders> orders = entityManager.createQuery(
+                "SELECT o FROM Orders o WHERE o.client = :client", Orders.class
+        ).setParameter("client", client).getResultList();
+
+        for (Orders order : orders) {
+            order.setClient(null);
+            entityManager.merge(order);
+        }
+
+        entityManager.remove(client);
+        /*clientRepository.deleteById(id);*/
     }
 
     @Override

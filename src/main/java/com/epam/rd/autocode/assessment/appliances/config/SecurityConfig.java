@@ -2,37 +2,20 @@ package com.epam.rd.autocode.assessment.appliances.config;
 
 import com.epam.rd.autocode.assessment.appliances.service.CustomUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.List;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -48,6 +31,14 @@ public class SecurityConfig {
     }
 
     @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(customUserService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
@@ -56,9 +47,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                /*.csrf(csrf -> csrf
+                        // Если h2-console или страницы восстановления пароля используют iframe или подобное,
+                        // можно добавить исключения для CSRF
+                        .ignoringRequestMatchers("/password/**")
+                )*/
                 .cors(httpSecurityCorsConfigurer ->
                         httpSecurityCorsConfigurer.configurationSource(request ->
                                 new CorsConfiguration().applyPermitDefaultValues()))
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 /*.exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))*/
                 .sessionManagement(session -> session
@@ -66,15 +63,18 @@ public class SecurityConfig {
                         .maximumSessions(1)
                         .expiredUrl("/login?expired=true"))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/error", "/login", "/register", "/", "/change-lang").permitAll()
-                        .requestMatchers("/employees/**").hasRole("EMPLOYEE")
+                        .requestMatchers("/error", "/login", "/register", "/", "/change-lang", "/oauth2/**").permitAll()
+                        .requestMatchers("/password/forgot-password", "/password/reset-password/**", "/password/reset-password-success", "/password/reset-password-error").permitAll()
+                        .requestMatchers("/employees/**", "/employees/add-employee", "/employees/{id}/delete",
+                                "/clients/**", "/orders/**", "appliances/add", "appliances/add-appliance").hasRole("EMPLOYEE")
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/appliances").hasAnyRole( "CLIENT", "EMPLOYEE")
                         .anyRequest().authenticated())
-                .userDetailsService(customUserService)
+                /*.userDetailsService(customUserService)*/
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .passwordParameter("password")
-                        .usernameParameter("email")// Указываем свою страницу логина
+                        /*.passwordParameter("password")
+                        .usernameParameter("email")*/
                         .permitAll() // Разрешаем доступ к самой странице логина
                 )
                 .oauth2Login(oauth2 -> oauth2

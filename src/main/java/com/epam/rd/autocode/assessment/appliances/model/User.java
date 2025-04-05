@@ -8,8 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+
 @MappedSuperclass
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class User {
@@ -31,6 +32,5 @@ public abstract class User {
     @NotNull(message = "Password is required")
     @Column(name = "password", nullable = false)
     private String password;
-
 
 }

@@ -7,6 +7,7 @@ import com.epam.rd.autocode.assessment.appliances.model.Orders;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -26,8 +27,14 @@ public class OrdersDTOMapper implements Function<Orders, OrdersDTO> {
 
         return new OrdersDTO(
                 orders.getId(),
-                new ClientDTOMapper().apply(orders.getClient()),
-                new EmployeeDTOMapper().apply(orders.getEmployee()),
+                Optional.ofNullable(orders.getClient())
+                        .map(new ClientDTOMapper())
+                        .orElse(null),
+                /*new ClientDTOMapper().apply(orders.getClient()),*/
+                Optional.ofNullable(orders.getEmployee())
+                        .map(new EmployeeDTOMapper())
+                        .orElse(null),
+                /*new EmployeeDTOMapper().apply(orders.getEmployee()),*/
                 orders.getOrderRowSet().stream()
                         .map(OrderRow::getId)
                         .collect(Collectors.toSet()),

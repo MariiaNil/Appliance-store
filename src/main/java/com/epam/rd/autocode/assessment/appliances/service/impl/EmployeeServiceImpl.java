@@ -3,8 +3,10 @@ package com.epam.rd.autocode.assessment.appliances.service.impl;
 import com.epam.rd.autocode.assessment.appliances.dto.EmployeeDTO;
 import com.epam.rd.autocode.assessment.appliances.mapper.EmployeeDTOMapper;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
+import com.epam.rd.autocode.assessment.appliances.model.Orders;
 import com.epam.rd.autocode.assessment.appliances.repository.EmployeeRepository;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeDTOMapper employeeDTOMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EntityManager entityManager;
 
     @Override
     @Transactional
@@ -48,8 +51,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public void deleteEmployee(Long id) {
-        employeeRepository.deleteById(id);
+        Employee employee = entityManager.find(Employee.class, id);
+
+        List<Orders> orders = entityManager.createQuery(
+                "SELECT o FROM Orders o WHERE o.employee = :employee", Orders.class
+        ).setParameter("employee", employee).getResultList();
+
+        for (Orders order : orders) {
+            order.setEmployee(null);
+            entityManager.merge(order);
+        }
+
+        /*employeeRepository.deleteById(id);*/
+        entityManager.remove(employee);
     }
 
     @Override

@@ -1,34 +1,32 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
+import com.epam.rd.autocode.assessment.appliances.model.Client;
+import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
-    private Long id;
-    private String name;
-    private String email;
-    private String password;
 
-    public static UserDetailsImpl build(User user) {
-        return new UserDetailsImpl(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getPassword());
-    }
+    private final String email;
+    private final String password;
+    private final Collection<? extends GrantedAuthority> authorities;
+    // Дополнительные поля, которые могут понадобиться
+    private final String card;
+    private final String department;
 
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
 
     @Override
@@ -38,7 +36,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return email;
     }
 
     @Override

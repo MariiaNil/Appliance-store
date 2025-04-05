@@ -8,6 +8,7 @@ import com.epam.rd.autocode.assessment.appliances.service.ClientService;
 import com.epam.rd.autocode.assessment.appliances.service.CustomUserService;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +16,46 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
+public class CustomUserServiceImpl implements CustomUserService {
+
+    private final ClientRepository clientRepository;
+    private final EmployeeRepository employeeRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        Optional<Client> clientOpt = clientRepository.findByEmail(username);
+        if (clientOpt.isPresent()) {
+            Client client = clientOpt.get();
+            return new UserDetailsImpl(
+                    client.getEmail(),
+                    client.getPassword(),
+                    AuthorityUtils.createAuthorityList("ROLE_CLIENT"),
+                    client.getCard(),
+                    null
+            );
+        }
+        Optional<Employee> employeeOpt = employeeRepository.findByEmail(username);
+        if (employeeOpt.isPresent()) {
+            Employee employee = employeeOpt.get();
+            return new UserDetailsImpl(
+                    employee.getEmail(),
+                    employee.getPassword(),
+                    AuthorityUtils.createAuthorityList("ROLE_EMPLOYEE"),
+                    null,
+                    employee.getDepartment()
+            );
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
+    }
+}
+
+
+
+/*
 @Service
 @RequiredArgsConstructor
 public class CustomUserServiceImpl implements CustomUserService {
@@ -45,3 +86,4 @@ public class CustomUserServiceImpl implements CustomUserService {
         }
     }
 }
+*/

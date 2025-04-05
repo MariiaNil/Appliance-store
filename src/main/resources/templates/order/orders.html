@@ -2,9 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link th:href="@{/styles/css/main.css}" rel="stylesheet" />
@@ -29,16 +27,14 @@
     <table class="table table-hover">
         <thead>
         <tr class="table-dark">
-            <!-- Сортировка по ID -->
             <th>
-                <a th:href="@{/orders(page=${ordersPage.number}, size=${ordersPage.size}, search=${search}, sort='id,asc')}" th:text="#{object.order.id}">ID</a>
+                <a th:href="@{/orders(page=${ordersPage.number}, size=${ordersPage.size}, search=${search}, sort='id,asc')}"
+                   th:text="#{object.order.id}">ID</a>
             </th>
-            <!-- Сортировка по клиенту (например, по имени клиента) -->
             <th>
                 <a th:href="@{/orders(page=${ordersPage.number}, search=${search}, size=${ordersPage.size}, sort='client.name,asc')}"
                    th:text="#{object.order.client}">Client</a>
             </th>
-            <!-- Сортировка по сотруднику -->
             <th>
                 <a th:href="@{/orders(page=${ordersPage.number}, search=${search}, size=${ordersPage.size}, sort='employee.name,asc')}"
                    th:text="#{object.order.employee}">Employee</a>
@@ -54,29 +50,47 @@
         <tbody>
         <tr th:each="order : ${ordersPage.content}">
             <td th:text="${order.id}"></td>
-            <td th:text="${order.client.name() + ' ' + order.client.email() + ' ' + order.client.card()}"></td>
-            <td th:text="${order.employee.name() + ' ' + order.employee.email() + ' ' + order.employee.department()}"></td>
+            <td>
+                <span th:if="${order.client != null}">
+                    <span th:text="${order.client.name + ' ' + order.client.email + ' ' + order.client.card}"></span>
+                </span>
+                <span th:unless="${order.client != null}"
+                      th:text="'Клиент удалён'"
+                      style="color: #dc3545; font-style: italic;">
+                </span>
+            </td>
+            <td>
+                <span th:if="${order.employee != null}">
+                    <span th:text="${order.employee.name + ' ' + order.employee.email + ' ' + order.employee.department}"></span>
+                </span>
+                <span th:unless="${order.employee != null}"
+                      th:text="'Не назначен'"
+                      style="color: #6c757d; font-style: italic;">
+                </span>
+            </td>
             <td>
                 <div th:if="${order.approved}">
-                    <a th:href="@{'/orders/' + ${order.id} + '/unapproved'}">
+                    <a th:href="@{'/orders/' + ${order.id} + '/unapproved'}"
+                       class="text-success">
                         <i class="fa fa-check"></i>
                     </a>
                 </div>
                 <div th:unless="${order.approved}">
-                    <a th:href="@{'/orders/' + ${order.id} + '/approved'}">
+                    <a th:href="@{'/orders/' + ${order.id} + '/approved'}"
+                       class="text-secondary">
                         <i class="fa fa-minus"></i>
                     </a>
                 </div>
             </td>
-            <td th:text="${order.totalAmount()}"></td>
+            <td th:text="${'$' + #numbers.formatDecimal(order.totalAmount, 1, 2)}"></td>
             <td>
-                <div>
-                    <a th:href="@{'/orders/' + ${order.id} + '/delete'}">
-                        <i class="fa fa-times"></i>
+                <div class="d-flex gap-2">
+                    <a th:href="@{'/orders/' + ${order.id} + '/delete'}"
+                       class="text-danger">
+                        <i class="fa fa-trash"></i>
                     </a>
-                </div>
-                <div>
-                    <a th:href="@{'/orders/' + ${order.id} + '/edit'}">
+                    <a th:href="@{'/orders/' + ${order.id} + '/edit'}"
+                       class="text-primary">
                         <i class="fa fa-edit"></i>
                     </a>
                 </div>
@@ -110,10 +124,15 @@
         </ul>
     </nav>
 
-    <a th:href="@{/orders/add}" class="btn btn-primary" th:text="#{orders.btn.new}">New Order</a>
+    <a th:href="@{/orders/add}"
+       class="btn btn-primary"
+       th:text="#{orders.btn.new}">New Order</a>
 </main>
 <footer>
     <div th:insert="~{footer::footer}"></div>
 </footer>
 </body>
 </html>
+
+
+

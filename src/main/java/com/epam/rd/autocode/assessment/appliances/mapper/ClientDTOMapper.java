@@ -11,6 +11,9 @@ public class ClientDTOMapper implements Function<Client, ClientDTO> {
 
     @Override
     public ClientDTO apply(Client client) {
+        if (client == null) {
+            return null;
+        }
         return new ClientDTO(
                 client.getId(),
                 client.getName(),

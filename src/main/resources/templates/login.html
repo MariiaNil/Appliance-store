@@ -25,6 +25,8 @@
             <input type="password" class="form-control" id="password" name="password" placeholder="Введите пароль" required>
         </div>
         <button type="submit" class="btn btn-primary">Войти</button>
+        <!-- Кнопка для восстановления пароля -->
+        <a th:href="@{/password/forgot-password}" class="btn btn-link">Забыли пароль?</a>
         <!-- Добавленная секция с ссылкой на регистрацию -->
         <div class="mt-3">
             <p class="text-center">

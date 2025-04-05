@@ -1,8 +1,12 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.Order;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "employee")

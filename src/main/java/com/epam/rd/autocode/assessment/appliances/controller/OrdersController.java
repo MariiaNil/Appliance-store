@@ -4,11 +4,10 @@ import com.epam.rd.autocode.assessment.appliances.dto.ApplianceDTO;
 import com.epam.rd.autocode.assessment.appliances.dto.ClientDTO;
 import com.epam.rd.autocode.assessment.appliances.dto.EmployeeDTO;
 import com.epam.rd.autocode.assessment.appliances.dto.OrdersDTO;
+import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.model.Orders;
-import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
-import com.epam.rd.autocode.assessment.appliances.service.ClientService;
-import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
-import com.epam.rd.autocode.assessment.appliances.service.OrderService;
+import com.epam.rd.autocode.assessment.appliances.service.*;
+import com.epam.rd.autocode.assessment.appliances.service.impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +17,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/orders")
@@ -36,26 +38,48 @@ public class OrdersController {
     private final ApplianceService applianceService;
 
 
-/*    @GetMapping("/{id}/my-orders")
-    public String clientListOrders(
-            @PathVariable("id") Long id,
-            Model model,
-            @RequestParam(value = "search", required = false) String search,
-            @PageableDefault(size = 5, sort = {"id", "client", "employee"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<OrdersDTO> ordersPage;
-
-        if (search != null && !search.trim().isEmpty()) {
-            ordersPage = orderService.searchOrdersForUser(id, search, pageable);
-        } else {
-            ordersPage = orderService.getOrdersByClientId(id, pageable);
-        }
-
+    @GetMapping("/my-orders")
+    public String clientListOrders(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                   Model model,
+                                   @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<OrdersDTO> ordersPage = orderService.getOrdersByClientId(userDetails.getUserId(), pageable);
         model.addAttribute("ordersPage", ordersPage);
-        model.addAttribute("search", search);
-        model.addAttribute("userId", id);
-
         return "order/my-orders";
-    }*/
+    }
+
+    @PostMapping("/add-to-cart")
+    public String addToCart(@RequestParam("applianceId") Long applianceId,
+                            @RequestParam("quantity") Long quantity,
+                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Optional<OrdersDTO> cartOrderOpt = orderService.getOrdersByClientId(userDetails.getUserId(), Pageable.unpaged())
+                .getContent().stream()
+                .filter(order -> Boolean.FALSE.equals(order.approved()))
+                .findFirst();
+
+        OrdersDTO cartOrder;
+        if (cartOrderOpt.isPresent()) {
+            cartOrder = cartOrderOpt.get();
+        } else {
+            Client client = clientService.getClientEntityById(userDetails.getUserId());
+            Orders newOrder = new Orders();
+            newOrder.setClient(client);
+            newOrder.setApproved(false);
+            Orders createdOrder = orderService.createOrder(newOrder);
+            cartOrder = orderService.getOrderById(createdOrder.getId());
+        }
+        ApplianceDTO applianceDto = applianceService.getApplianeById(applianceId);
+        BigDecimal appliancePrice = applianceDto.price();
+        orderService.addApplianceToOrder(cartOrder.id(), applianceId, quantity, appliancePrice);
+        return "redirect:/orders/my-orders";
+    }
+
+    @PostMapping("/updateEmployee")
+    public String updateEmployeeForOrder(@RequestParam("orderId") Long orderId,
+                                         @RequestParam(value = "employeeId", required = false) Long employeeId) {
+        orderService.updateEmployeeForOrder(orderId, employeeId);
+        return "redirect:/orders";
+    }
+
 
 
     @GetMapping
@@ -100,6 +124,12 @@ public class OrdersController {
     public String deleteOrder(@PathVariable("id") Long id) {
         orderService.deleteOrder(id);
         return "redirect:/orders";
+    }
+
+    @GetMapping("/my-orders/{id}/delete")
+    public String deleteMyOrder(@PathVariable("id") Long id) {
+        orderService.deleteOrder(id);
+        return "redirect:/orders/my-orders";
     }
 
     @PreAuthorize("hasRole('EMPLOYEE')")

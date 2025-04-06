@@ -17,10 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
+    private final Long userId;
     private final String email;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
-    // Дополнительные поля, которые могут понадобиться
     private final String card;
     private final String department;
 

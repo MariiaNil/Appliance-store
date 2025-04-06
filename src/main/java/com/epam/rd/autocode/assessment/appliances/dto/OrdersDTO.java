@@ -7,7 +7,7 @@ public record OrdersDTO(
         Long id,
         ClientDTO client,
         EmployeeDTO employee,
-        Set<Long> orderRowIds,
+        Set<OrderRowDTO> orderRows,
         Boolean approved,
         BigDecimal totalAmount
 ) { }

@@ -1,6 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
 import com.epam.rd.autocode.assessment.appliances.dto.ManufacturerDTO;
+import com.epam.rd.autocode.assessment.appliances.exception.ManufacturerNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.mapper.ManufacturerDTOMapper;
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
 import com.epam.rd.autocode.assessment.appliances.repository.ManufacturerRepository;
@@ -38,7 +39,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
         return manufacturerRepository.findById(id)
                 .map(manufacturerDTOMapper)
                 .orElseThrow(() ->
-                   new RuntimeException("Manufacturer not found"));
+                   new ManufacturerNotFoundException("Manufacturer not found"));
     }
 
     @Override

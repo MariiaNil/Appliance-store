@@ -1,6 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
 import com.epam.rd.autocode.assessment.appliances.dto.EmployeeDTO;
+import com.epam.rd.autocode.assessment.appliances.exception.EmployeeNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.mapper.EmployeeDTOMapper;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.model.Orders;
@@ -41,7 +42,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findById(id)
                 .map(employeeDTOMapper)
                 .orElseThrow(() ->
-                        new RuntimeException("Employee not found"));
+                        new EmployeeNotFoundException("Employee not found"));
     }
 
     @Override
@@ -54,7 +55,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public void deleteEmployee(Long id) {
         Employee employee = entityManager.find(Employee.class, id);
-
         List<Orders> orders = entityManager.createQuery(
                 "SELECT o FROM Orders o WHERE o.employee = :employee", Orders.class
         ).setParameter("employee", employee).getResultList();
@@ -63,8 +63,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             order.setEmployee(null);
             entityManager.merge(order);
         }
-
-        /*employeeRepository.deleteById(id);*/
         entityManager.remove(employee);
     }
 

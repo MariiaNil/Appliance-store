@@ -1,11 +1,13 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
 import com.epam.rd.autocode.assessment.appliances.dto.ClientDTO;
+import com.epam.rd.autocode.assessment.appliances.exception.ClientNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.mapper.ClientDTOMapper;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.model.Orders;
 import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -44,7 +46,13 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.findById(id)
                 .map(clientDTOMapper)
                 .orElseThrow(() ->
-                     new RuntimeException("Client not found"));
+                     new ClientNotFoundException("Client not found"));
+    }
+
+    @Override
+    public Client getClientEntityById(Long id) {
+        return clientRepository.findById(id)
+                .orElseThrow(() -> new EntityExistsException("Client not found"));
     }
 
     @Override
@@ -62,7 +70,6 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public void deleteClient(Long id) {
         Client client = entityManager.find(Client.class, id);
-
         List<Orders> orders = entityManager.createQuery(
                 "SELECT o FROM Orders o WHERE o.client = :client", Orders.class
         ).setParameter("client", client).getResultList();
@@ -73,7 +80,6 @@ public class ClientServiceImpl implements ClientService {
         }
 
         entityManager.remove(client);
-        /*clientRepository.deleteById(id);*/
     }
 
     @Override

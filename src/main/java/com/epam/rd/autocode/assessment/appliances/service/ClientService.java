@@ -11,6 +11,7 @@ import java.util.List;
 public interface ClientService {
     Client createClient(Client client);
     ClientDTO getClientById(Long id);
+    Client getClientEntityById(Long id);
     Page<ClientDTO> getClients(Pageable pageable);
     ClientDTO updateClient(Long id, ClientDTO clientDto);
     void deleteClient(Long id);

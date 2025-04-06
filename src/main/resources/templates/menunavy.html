@@ -7,19 +7,19 @@
             <a class="navbar-brand" href="/" th:text="#{shop.name}"></a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasRole('EMPLOYEE')">
                         <a class="nav-link" th:href="@{/clients}" th:text="#{clients.menu.name}"></a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasRole('EMPLOYEE')">
                         <a class="nav-link" th:href="@{/employees}" th:text="#{employees.menu.name}"></a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasRole('EMPLOYEE')">
                         <a class="nav-link" th:href="@{/manufacturers}" th:text="#{manufacturers.menu.name}"></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/appliances}" th:text="#{appliances.menu.name}"></a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasRole('EMPLOYEE')">
                         <a class="nav-link" th:href="@{/orders}" th:text="#{order.menu.name}"></a>
                     </li>
 
@@ -30,13 +30,17 @@
                         </div>
                     </li>
 
+                    <li class="nav-item" sec:authorize="hasRole('CLIENT')">
+                        <a class="nav-link" th:href="@{/orders/my-orders}" th:text="#{my.orders.menu}"></a>
+                    </li>
+
                     <!-- Блок для аутентифицированных пользователей -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <div class="d-flex">
+                        <div class="d-flex align-items-center">
+                            <span class="text-white me-3" sec:authentication="name"></span>
                             <a class="btn btn-outline-light" th:href="@{/logout}" th:text="#{logout.button}"></a>
                         </div>
                     </li>
-
                     <!--&lt;!&ndash; Блок кнопок для регистрации, входа и выхода &ndash;&gt;
                     <li class="nav-item">
                         <div class="d-flex">

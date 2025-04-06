@@ -15,15 +15,22 @@
 </header>
 <main class="container mt-5">
     <h1>Вход</h1>
+    <!-- Блок отображения ошибок -->
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <form th:action="@{/login}" method="post">
         <div class="mb-3">
-            <label for="username" class="form-label">Имя пользователя</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Введите имя пользователя" required>
+            <label for="email" class="form-label">Email</label> <!-- Изменено с username на email -->
+            <input type="email" class="form-control" id="email" name="email"
+                   placeholder="example@mail.com" required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Пароль</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="Введите пароль" required>
         </div>
+
         <button type="submit" class="btn btn-primary">Войти</button>
         <!-- Кнопка для восстановления пароля -->
         <a th:href="@{/password/forgot-password}" class="btn btn-link">Забыли пароль?</a>

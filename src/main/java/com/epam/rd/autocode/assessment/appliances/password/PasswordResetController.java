@@ -24,7 +24,6 @@ import java.util.UUID;
 @RequestMapping("/password")
 public class PasswordResetController {
 
-    private final ClientService clientService;
     private final PasswordResetTokenRepository tokenRepository;
     private final JavaMailSender mailSender;
     private final PasswordEncoder passwordEncoder;

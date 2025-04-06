@@ -64,6 +64,7 @@
                 <a th:href="@{/appliances(page=${appliancesPage.number}, size=${appliancesPage.size}, sort='price,asc', search=${search})}"
                    th:text="#{object.appliance.price}">Price</a>
             </th>
+            <th>Корзина</th>
         </tr>
         </thead>
         <tbody>
@@ -78,6 +79,18 @@
             <td th:text="${appliance.description}"/>
             <td><span class="float-end" th:text="${appliance.power}"/></td>
             <td><span class="float-end" th:text="${appliance.price}"/></td>
+            <!-- Кнопка "Add to Cart"
+            <td>
+                <a th:href="@{'/orders/add-to-cart?applianceId=' + ${appliance.id}}" class="btn btn-success">Add to Cart</a>
+            </td>-->
+            <!-- Форма добавления в корзину с указанием количества -->
+            <td>
+                <form th:action="@{/orders/add-to-cart}" method="post" class="d-flex align-items-center gap-1">
+                    <input type="hidden" name="applianceId" th:value="${appliance.id}"/>
+                    <input type="number" name="quantity" value="1" min="1" class="form-control form-control-sm" style="width: 60px;">
+                    <button type="submit" class="btn btn-sm btn-success">Add</button>
+                </form>
+            </td>
         </tr>
 
         </tbody>

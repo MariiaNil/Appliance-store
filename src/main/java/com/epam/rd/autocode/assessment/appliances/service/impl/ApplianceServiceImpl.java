@@ -1,6 +1,8 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
+import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.dto.ApplianceDTO;
+import com.epam.rd.autocode.assessment.appliances.exception.ApplianceNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.mapper.ApplianceDTOMapper;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.repository.ApplianceRepository;
@@ -23,24 +25,27 @@ public class ApplianceServiceImpl implements ApplianceService {
     private final ApplianceRepository applianceRepository;
     private final ApplianceDTOMapper applianceDTOMapper;
 
+    @Loggable
     @Override
     public Page<ApplianceDTO> getAppliances(Pageable pageable) {
         Page<Appliance> appliancePage = applianceRepository.findAll(pageable);
         return appliancePage.map(applianceDTOMapper);
     }
 
+    @Loggable
     @Override
     @Transactional
     public Appliance createAppliance(Appliance appliance) {
         return applianceRepository.save(appliance);
     }
 
+    @Loggable
     @Override
     public ApplianceDTO getApplianeById(Long id) {
         return applianceRepository.findById(id)
                 .map(applianceDTOMapper)
                 .orElseThrow(() ->
-                    new RuntimeException("Appliance not found"));
+                    new ApplianceNotFoundException("Appliance not found"));
 
     }
 

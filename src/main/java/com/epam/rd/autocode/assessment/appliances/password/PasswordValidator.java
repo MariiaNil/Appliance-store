@@ -1,6 +1,5 @@
 package com.epam.rd.autocode.assessment.appliances.password;
 
-import com.epam.rd.autocode.assessment.appliances.exception.InvalidPasswordException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -26,7 +25,7 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
         if (!password.matches(".*[!@#$%^&*()].*"))
             errors.add("Password must contain at least one special character");
         if (!errors.isEmpty())
-            throw new InvalidPasswordException(errors);
+            throw new RuntimeException("SSS");
 
         return true;
     }

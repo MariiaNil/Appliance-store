@@ -35,9 +35,10 @@ public class OrdersDTOMapper implements Function<Orders, OrdersDTO> {
                         .map(new EmployeeDTOMapper())
                         .orElse(null),
                 /*new EmployeeDTOMapper().apply(orders.getEmployee()),*/
-                orders.getOrderRowSet().stream()
+                orderRows,
+                /*orders.getOrderRowSet().stream()
                         .map(OrderRow::getId)
-                        .collect(Collectors.toSet()),
+                        .collect(Collectors.toSet()),*/
                 orders.getApproved(),
                 totalAmount
         );

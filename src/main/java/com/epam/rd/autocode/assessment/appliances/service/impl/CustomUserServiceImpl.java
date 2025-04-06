@@ -1,5 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
+import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
@@ -24,12 +25,14 @@ public class CustomUserServiceImpl implements CustomUserService {
     private final EmployeeRepository employeeRepository;
 
     @Override
+    @Loggable
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<Client> clientOpt = clientRepository.findByEmail(username);
         if (clientOpt.isPresent()) {
             Client client = clientOpt.get();
             return new UserDetailsImpl(
+                    client.getId(),
                     client.getEmail(),
                     client.getPassword(),
                     AuthorityUtils.createAuthorityList("ROLE_CLIENT"),
@@ -41,6 +44,7 @@ public class CustomUserServiceImpl implements CustomUserService {
         if (employeeOpt.isPresent()) {
             Employee employee = employeeOpt.get();
             return new UserDetailsImpl(
+                    employee.getId(),
                     employee.getEmail(),
                     employee.getPassword(),
                     AuthorityUtils.createAuthorityList("ROLE_EMPLOYEE"),
@@ -54,36 +58,34 @@ public class CustomUserServiceImpl implements CustomUserService {
 }
 
 
+/*@Override
+@Loggable
+public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-/*
-@Service
-@RequiredArgsConstructor
-public class CustomUserServiceImpl implements CustomUserService {
-
-    private final ClientRepository clientRepository;
-    private final EmployeeRepository employeeRepository;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Optional<Client> client = clientRepository.findByEmail(username);
-        if (client.isPresent()) {
-            Client c = client.get();
-            return User.withUsername(c.getEmail())
-                    .password(c.getPassword())
-                    .roles("CLIENT")
-                    .build();
-        }
-        Optional<Employee> employee = employeeRepository.findByEmail(username);
-        if (employee.isPresent()) {
-            Employee e = employee.get();
-            return User.withUsername(e.getEmail())
-                    .password(e.getPassword())
-                    .roles("EMPLOYEE")
-                    .build();
-        } else {
-            throw new UsernameNotFoundException("User not found");
-        }
+    Optional<Client> clientOpt = clientRepository.findByEmail(username);
+    if (clientOpt.isPresent()) {
+        Client client = clientOpt.get();
+        return new UserDetailsImpl(
+                client.getId(),
+                client.getEmail(),
+                client.getPassword(),
+                AuthorityUtils.createAuthorityList("ROLE_CLIENT"),
+                client.getCard(),
+                null
+        );
     }
-}
-*/
+    Optional<Employee> employeeOpt = employeeRepository.findByEmail(username);
+    if (employeeOpt.isPresent()) {
+        Employee employee = employeeOpt.get();
+        return new UserDetailsImpl(
+                employee.getId(),
+                employee.getEmail(),
+                employee.getPassword(),
+                AuthorityUtils.createAuthorityList("ROLE_EMPLOYEE"),
+                null,
+                employee.getDepartment()
+        );
+    } else {
+        throw new UsernameNotFoundException("User not found");
+    }
+}*/

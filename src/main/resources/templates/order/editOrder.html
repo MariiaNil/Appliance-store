@@ -46,23 +46,29 @@
             </div>
         </div>
 
-        <!-- Сотрудник -->
-        <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" th:text="#{object.order.employee}">Employee</label>
-            <div class="col-sm-10">
-                <div th:if="${order.employee != null}" class="form-control" disabled>
-                    <span th:text="${order.employee.name + ' (' + order.employee.department + ')'}"></span>
-                </div>
-                <div th:unless="${order.employee != null}" class="form-control deleted-entity" disabled>
-                    Сотрудник не назначен
+        <!-- Сотрудник (выпадающий список) -->
+        <form th:action="@{/orders/updateEmployee}" method="post">
+            <input type="hidden" name="orderId" th:value="${order.id}" />
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Employee</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="employeeId">
+                        <option value="" th:if="${order.employee == null}">Сотрудник не назначен</option>
+                        <option th:each="emp : ${employees}"
+                                th:value="${emp.id}"
+                                th:text="${emp.name + ' (' + emp.department + ')'}"
+                                th:selected="${order.employee != null and order.employee.id == emp.id}">
+                        </option>
+                    </select>
                 </div>
             </div>
-        </div>
+            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        </form>
     </div>
 
-    <!-- Таблица с товарами -->
+    <!-- Таблица с товарами заказа -->
     <div class="info-section">
-        <h4 class="mb-3" th:text="#{object.order.items}">Items</h4>
+        <h4 class="mb-3" th:text="#{object.order.items}">Order Items</h4>
         <table class="table table-hover">
             <thead>
             <tr class="table-dark">
@@ -73,7 +79,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="row : ${rows}">
+            <tr th:each="row : ${order.orderRows}">
                 <td th:text="${row.id}"></td>
                 <td>
                     <span th:if="${row.appliance != null}"

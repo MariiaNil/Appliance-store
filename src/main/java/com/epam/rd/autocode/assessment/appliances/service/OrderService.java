@@ -13,6 +13,8 @@ public interface OrderService {
     Page<OrdersDTO> getOrdersByClientId(Long clientId, Pageable pageable);
     Page<OrdersDTO> searchOrdersForUser(Long clientId, String search, Pageable pageable);
 
+    void updateEmployeeForOrder(Long orderId, Long employeeId);
+
     Orders createOrder(Orders orders);
     OrdersDTO getOrderById(Long id);
     OrdersDTO updateOrder(Long id, OrdersDTO ordersDto);

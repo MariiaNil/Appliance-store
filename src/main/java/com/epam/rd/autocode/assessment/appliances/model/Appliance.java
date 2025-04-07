@@ -28,12 +28,6 @@ public class Appliance {
     @Column(name = "model")
     private String model;
 
-
-    /*@ManyToOne(fetch = FetchType.LAZY)*/
-    /*@JoinColumns({
-            @JoinColumn(name = "manufacturer_id", referencedColumnName = "id"),
-            @JoinColumn(name = "manufacturer_name", referencedColumnName = "name")
-    })*/
     @ManyToOne
     @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;

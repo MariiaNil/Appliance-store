@@ -12,7 +12,6 @@ public interface ApplianceService {
     Page<ApplianceDTO> getAppliances(Pageable pageable);
     Appliance createAppliance(Appliance appliance);
     ApplianceDTO getApplianeById(Long id);
-    ApplianceDTO updateAppliance(Long id,ApplianceDTO applianceDto);
     void deleteAppliance(Long id);
     List<ApplianceDTO> getAllAppliancesList();
 

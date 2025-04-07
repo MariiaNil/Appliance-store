@@ -35,19 +35,6 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     }
 
     @Override
-    public ManufacturerDTO getManufacturerById(Long id) {
-        return manufacturerRepository.findById(id)
-                .map(manufacturerDTOMapper)
-                .orElseThrow(() ->
-                   new ManufacturerNotFoundException("Manufacturer not found"));
-    }
-
-    @Override
-    public ManufacturerDTO updateManufacturer(Long id, ManufacturerDTO manufacturerDto) {
-        return null;
-    }
-
-    @Override
     public void deleteManufacturer(Long id) {
         manufacturerRepository.deleteById(id);
     }

@@ -2,27 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Выход</title>
+    <title th:text="#{logout.title}">Выход</title>
 </head>
 <body>
 <header>
-    <!-- Подключаем навигационное меню -->
     <div th:insert="~{menunavy::navy}"></div>
 </header>
 <main class="container d-flex justify-content-center align-items-center" style="height: 80vh;">
     <div class="card p-4 shadow text-center" style="max-width: 400px; width: 100%;">
-        <h2>Выход</h2>
-        <p>Вы действительно хотите выйти?</p>
+        <h2 th:text="#{logout.heading}">Выход</h2>
+        <p th:text="#{logout.confirmation}">Вы действительно хотите выйти?</p>
         <form th:action="@{/logout}" method="post">
-            <button type="submit" class="btn btn-danger">Выйти</button>
+            <button type="submit" class="btn btn-danger" th:text="#{logout.button}">Выйти</button>
         </form>
     </div>
 </main>
 <div th:insert="~{footer::footer}"></div>
 </body>
 </html>
-

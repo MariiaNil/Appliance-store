@@ -42,6 +42,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'CLIENT')")
     public ClientDTO getClientById(Long id) {
         return clientRepository.findById(id)
                 .map(clientDTOMapper)
@@ -50,24 +51,22 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'CLIENT')")
     public Client getClientEntityById(Long id) {
         return clientRepository.findById(id)
                 .orElseThrow(() -> new EntityExistsException("Client not found"));
     }
 
     @Override
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public Page<ClientDTO> getClients(Pageable pageable) {
         Page<Client> clientPage = clientRepository.findAll(pageable);
         return clientPage.map(clientDTOMapper);
     }
 
     @Override
-    public ClientDTO updateClient(Long id, ClientDTO clientDto) {
-        return null;
-    }
-
-    @Override
     @Transactional
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public void deleteClient(Long id) {
         Client client = entityManager.find(Client.class, id);
         List<Orders> orders = entityManager.createQuery(
@@ -83,6 +82,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public List<ClientDTO> getAllClientsList() {
         return clientRepository.findAll()
                 .stream()
@@ -91,6 +91,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public Page<ClientDTO> searchClients(String search, Pageable pageable) {
         return clientRepository.findByNameContainingIgnoreCase(search, pageable)
                 .map(clientDTOMapper);

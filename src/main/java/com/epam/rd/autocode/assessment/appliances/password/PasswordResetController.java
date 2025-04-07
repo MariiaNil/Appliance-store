@@ -43,19 +43,16 @@ public class PasswordResetController {
             return "/password/forgot-password";
         }
         Client client = clientOps.get();
-        // Удаляем старые токены для этого клиента
         tokenRepository.deleteByClient(client);
 
-
-        // Генерируем токен
         String token = UUID.randomUUID().toString();
         PasswordResetToken resetToken = new PasswordResetToken();
         resetToken.setToken(token);
         resetToken.setClient(client);
-        resetToken.setExpiryDate(LocalDateTime.now().plusHours(1)); // токен действует 1 час
+        resetToken.setExpiryDate(LocalDateTime.now().plusHours(1));
         tokenRepository.save(resetToken);
 
-        // Отправка email с ссылкой для сброса пароля
+
         String resetLink = "http://localhost:8080/password/reset-password?token=" + token;
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(client.getEmail());
@@ -75,7 +72,7 @@ public class PasswordResetController {
             return "/password/reset-password-error";
         }
         model.addAttribute("token", token);
-        return "/password/reset-password"; // HTML-страница с формой ввода нового пароля
+        return "/password/reset-password";
     }
 
     @PostMapping("/reset-password")
@@ -89,11 +86,9 @@ public class PasswordResetController {
         }
 
         Client client = tokenOpt.get().getClient();
-        // Кодирование нового пароля
         client.setPassword(passwordEncoder.encode(password));
-        clientRepository.save(client); // метод для сохранения обновленного пользователя
+        clientRepository.save(client);
 
-        // Можно удалить токен после использования
         tokenRepository.delete(tokenOpt.get());
 
         model.addAttribute("message", "Пароль успешно изменен.");

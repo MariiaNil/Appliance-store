@@ -1,7 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.config;
 
-import com.epam.rd.autocode.assessment.appliances.jwt.JwtAuthFilter;
-import com.epam.rd.autocode.assessment.appliances.password.LoginAttemptService;
+import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.service.CustomUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -36,7 +35,6 @@ import java.util.List;
 public class SecurityConfig {
 
     private final CustomUserService customUserService;
-    private final LoginAttemptService  loginAttemptService;
 
 
     @Bean
@@ -58,6 +56,7 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Loggable
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
         http
@@ -80,8 +79,6 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .maximumSessions(1)
                         .expiredUrl("/login?expired=true"))
-                /*.sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))*/
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/errors/**", "/error", "/login", "/register", "/", "/change-lang", "/oauth2/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
@@ -98,36 +95,22 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .failureHandler((request, response, e) -> {
-                            String email = request.getParameter("email");
-                            loginAttemptService.loginFailed(email); // Фиксируем неудачу
-                        })
-                        /*.passwordParameter("password")
-                        .usernameParameter("email")*/
-                        .permitAll() // Разрешаем доступ к самой странице логина
+                        .failureUrl("/errors/login-error")
+                        .permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login"))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/") // После выхода перенаправляет на страницу логина
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
                 .authenticationProvider(authenticationProvider);
-                /*.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);*/
 
         return http.build();
     }
 
 }
-
-
-// Создать страницу регистрации +
-    // контроллер для нее +
-    // роли для регистрации (не делаем) +
-    // прикрутить сохранения пользователей в бд +
-    // пароли +
-    // зброс паролей +
 

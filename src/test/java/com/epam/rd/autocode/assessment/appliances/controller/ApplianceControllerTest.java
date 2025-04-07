@@ -67,7 +67,6 @@ class ApplianceControllerTest {
 
     @Test
     void testShowAddApplianceForm() {
-        // Подготавливаем страницу с производителями (можно создать мок страницы)
         when(manufacturerService.getAllManufacturers(any(Pageable.class))).thenReturn(new org.springframework.data.domain.PageImpl<>(List.of()));
 
         String view = controller.showAddApplianceForm(model, 100);

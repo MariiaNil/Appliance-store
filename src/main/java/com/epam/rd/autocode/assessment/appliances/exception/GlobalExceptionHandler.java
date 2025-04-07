@@ -12,44 +12,44 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return createErrorView("Ошибка: ", ex, HttpStatus.NOT_FOUND);
+        return createErrorView("Error: ", ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ApplianceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handleApplianceNotFoundException(ApplianceNotFoundException ex) {
-        return createErrorView("Ошибка прибора: ", ex, HttpStatus.NOT_FOUND);
+        return createErrorView("Error appliance: ", ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ClientNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handleClientNotFoundException(ClientNotFoundException ex) {
-        return createErrorView("Ошибка клиента: ", ex, HttpStatus.NOT_FOUND);
+        return createErrorView("Error client   : ", ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(EmployeeNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handleEmployeeNotFoundException(EmployeeNotFoundException ex) {
-        return createErrorView("Ошибка сотрудника: ", ex, HttpStatus.NOT_FOUND);
+        return createErrorView("Error employee: ", ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ManufacturerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handleManufacturerNotFoundException(ManufacturerNotFoundException ex) {
-        return createErrorView("Ошибка производителя: ", ex, HttpStatus.NOT_FOUND);
+        return createErrorView("Error manufacturer  : ", ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(OrderNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handleOrderNotFoundException(OrderNotFoundException ex) {
-        return createErrorView("Ошибка заказа: ", ex, HttpStatus.NOT_FOUND);
+        return createErrorView("Error order : ", ex, HttpStatus.NOT_FOUND);
     }
 
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handleException(Exception ex) {
-        return createErrorView("Внутренняя ошибка сервера", HttpStatus.INTERNAL_SERVER_ERROR);
+        return createErrorView("Internal Server Error: ", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private ModelAndView createErrorView(String prefix, Exception ex, HttpStatus status) {

@@ -2,44 +2,50 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <!-- Подключение Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Регистрация</title>
+    <title th:text="#{register.title}">Регистрация</title>
 </head>
 <body>
 <header>
-    <!-- Подключаем навигационное меню -->
     <div th:insert="~{menunavy::navy}"></div>
 </header>
 <main class="container mt-5">
-    <h1>Регистрация</h1>
+    <h1 th:text="#{register.heading}">Регистрация</h1>
     <form th:action="@{/register}" th:object="${client}" method="post">
         <div class="mb-3">
-            <label for="name" class="form-label">Имя</label>
-            <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Введите имя" required>
+            <label for="name" class="form-label" th:text="#{register.label.name}">Имя</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}"
+                   th:placeholder="#{register.placeholder.name}" required>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
         </div>
         <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Введите email" required>
+            <label for="email" class="form-label" th:text="#{register.label.email}">Email</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}"
+                   th:placeholder="#{register.placeholder.email}" required>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Пароль</label>
-            <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Введите пароль" required>
+            <label for="password" class="form-label" th:text="#{register.label.password}">Пароль</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}"
+                   th:placeholder="#{register.placeholder.password}" required>
+            <!-- Отображение ошибок для пароля, например, несоответствие требованиям -->
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
         </div>
         <div class="mb-3">
-            <label for="confirmPassword" class="form-label">Подтверждение пароля</label>
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Подтвердите пароль" required>
+            <label for="confirmPassword" class="form-label" th:text="#{register.label.confirmPassword}">Подтверждение пароля</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                   th:placeholder="#{register.placeholder.confirmPassword}" required>
         </div>
         <div class="mb-3">
-            <label for="card" class="form-label">Номер карты</label>
-            <input type="text" class="form-control" id="card" th:field="*{card}" placeholder="Введите номер карты" required>
+            <label for="card" class="form-label" th:text="#{register.label.card}">Номер карты</label>
+            <input type="text" class="form-control" id="card" th:field="*{card}"
+                   th:placeholder="#{register.placeholder.card}" required>
+            <div th:if="${#fields.hasErrors('card')}" th:errors="*{card}" class="text-danger"></div>
         </div>
-        <button  type="submit" class="btn btn-primary">Зарегистрироваться</button>
-<!--        <a th:href="@{/register/add}" type="submit" class="btn btn-primary" th:text="#{register.btn.new}">Зарегистрироваться</a>-->
+        <button type="submit" class="btn btn-primary" th:text="#{register.button.submit}">Зарегистрироваться</button>
     </form>
 </main>
 <div th:insert="~{footer::footer}"></div>
-<!-- Подключение Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -32,4 +32,11 @@ public class ErrorController {
         model.addAttribute("errorMessage", message != null ? message : "Для доступа к данной странице, пожалуйста, авторизуйтесь");
         return "errors/error401";
     }
+
+    @GetMapping("/login-error")
+    public String loginError(Model model) {
+        model.addAttribute("errorCode", 401);
+        model.addAttribute("errorMessage", "Неправильный логин или пароль");
+        return "errors/login-error";
+    }
 }

@@ -11,13 +11,11 @@ public interface OrderService {
     Page<OrdersDTO> getAllOrders(Pageable pageable);
     Page<OrdersDTO> searchOrders(String search, Pageable pageable);
     Page<OrdersDTO> getOrdersByClientId(Long clientId, Pageable pageable);
-    Page<OrdersDTO> searchOrdersForUser(Long clientId, String search, Pageable pageable);
 
     void updateEmployeeForOrder(Long orderId, Long employeeId);
 
     Orders createOrder(Orders orders);
     OrdersDTO getOrderById(Long id);
-    OrdersDTO updateOrder(Long id, OrdersDTO ordersDto);
     void deleteOrder(Long id);
 
     OrdersDTO approvedOrder(Long id, boolean approved);

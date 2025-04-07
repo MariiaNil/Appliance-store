@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +33,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public Employee createEmployee(Employee employee) {
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }
 
     @Override
+    /*@PreAuthorize("hasRole('EMPLOYEE')")*/
     public EmployeeDTO getEmployeeById(Long id) {
         return employeeRepository.findById(id)
                 .map(employeeDTOMapper)
@@ -46,6 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public Page<EmployeeDTO> getEmployees(Pageable pageable) {
         Page<Employee> employeePage = employeeRepository.findAll(pageable);
         return employeePage.map(employeeDTOMapper);
@@ -53,6 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public void deleteEmployee(Long id) {
         Employee employee = entityManager.find(Employee.class, id);
         List<Orders> orders = entityManager.createQuery(
@@ -67,12 +72,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public Page<EmployeeDTO> searchEmployees(String search, Pageable pageable) {
         return employeeRepository.findByNameContainingIgnoreCase(search, pageable)
                 .map(employeeDTOMapper);
     }
 
     @Override
+    /*@PreAuthorize("hasRole('EMPLOYEE')")*/
     public List<EmployeeDTO> getAllEmployeesList() {
         return employeeRepository.findAll()
                 .stream()

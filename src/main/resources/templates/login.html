@@ -2,56 +2,55 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Login Page</title>
+    <title th:text="#{login.title}">Login Page</title>
 </head>
 <body>
 <header>
-    <!-- Подключаем навигационное меню -->
     <div th:insert="~{menunavy::navy}"></div>
 </header>
 <main class="container mt-5">
-    <h1>Вход</h1>
-    <!-- Блок отображения ошибок -->
+    <h1 th:text="#{login.heading}">Вход</h1>
+
     <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
         <span th:text="${error}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+
     <form th:action="@{/login}" method="post">
         <div class="mb-3">
-            <label for="email" class="form-label">Email</label> <!-- Изменено с username на email -->
+            <label for="email" class="form-label" th:text="#{login.email.label}">Email</label>
             <input type="email" class="form-control" id="email" name="email"
-                   placeholder="example@mail.com" required>
+                   th:placeholder="#{login.email.placeholder}" required>
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Пароль</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Введите пароль" required>
+            <label for="password" class="form-label" th:text="#{login.password.label}">Пароль</label>
+            <input type="password" class="form-control" id="password" name="password"
+                   th:placeholder="#{login.password.placeholder}" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Войти</button>
-        <!-- Кнопка для восстановления пароля -->
-        <a th:href="@{/password/forgot-password}" class="btn btn-link">Забыли пароль?</a>
-        <!-- Добавленная секция с ссылкой на регистрацию -->
+        <button type="submit" class="btn btn-primary" th:text="#{login.button.submit}">Войти</button>
+
+        <a th:href="@{/password/forgot-password}" class="btn btn-link" th:text="#{login.forgotPassword}">Забыли пароль?</a>
+
         <div class="mt-3">
             <p class="text-center">
-                Нет аккаунта?
-                <a th:href="@{/register}" class="link-primary">Зарегистрируйтесь здесь</a>
+                <span th:text="#{login.noAccount}">Нет аккаунта?</span>
+                <a th:href="@{/register}" class="link-primary" th:text="#{login.registerHere}">Зарегистрируйтесь здесь</a>
             </p>
         </div>
     </form>
+
     <hr>
-    <p class="text-center"> Войти через соцсети </p>
+    <p class="text-center" th:text="#{login.socialLogin}">Войти через соцсети</p>
 
     <div class="text-center">
-        <!-- Кнопки для входа через OAuth2 -->
         <a class="btn btn-danger" th:href="@{/oauth2/authorization/google}">
-            <i class="bi bi-google"></i> Войти через Google
+            <i class="bi bi-google"></i> <span th:text="#{login.withGoogle}">Войти через Google</span>
         </a>
         <a class="btn btn-primary" th:href="@{/oauth2/authorization/github}">
-            <i class="bi bi-facebook"></i> Войти через GitHub
+            <i class="bi bi-facebook"></i> <span th:text="#{login.withGithub}">Войти через GitHub</span>
         </a>
     </div>
 </main>

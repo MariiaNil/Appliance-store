@@ -13,7 +13,6 @@ public interface ClientService {
     ClientDTO getClientById(Long id);
     Client getClientEntityById(Long id);
     Page<ClientDTO> getClients(Pageable pageable);
-    ClientDTO updateClient(Long id, ClientDTO clientDto);
     void deleteClient(Long id);
     List<ClientDTO> getAllClientsList();
     Page<ClientDTO> searchClients(String search, Pageable pageable);

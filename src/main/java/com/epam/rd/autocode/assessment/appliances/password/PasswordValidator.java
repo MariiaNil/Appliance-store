@@ -3,30 +3,38 @@ package com.epam.rd.autocode.assessment.appliances.password;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
 
     @Override
-    public boolean isValid(String password, ConstraintValidatorContext constraintValidatorContext) {
-        List<String> errors = new ArrayList<>();
+    public void initialize(ValidPassword constraintAnnotation) {
+    }
 
-        if (password == null)
-            errors.add("Password is required");
-        if (password.length() < 8)
-            errors.add("Password must be at least 8 characters long");
-        if (!password.matches(".*[A-Z].*.*[A-Z].*"))
-            errors.add("Password must contain at least one uppercase letter");
-        if (!password.matches(".*[a-z].*"))
-            errors.add("Password must contain at least one lowercase letter");
-        if (!password.matches(".*\\d.*"))
-            errors.add("Password must contain at least one digit");
-        if (!password.matches(".*[!@#$%^&*()].*"))
-            errors.add("Password must contain at least one special character");
-        if (!errors.isEmpty())
-            throw new RuntimeException("SSS");
+    @Override
+    public boolean isValid(String password, ConstraintValidatorContext context) {
+        if (password == null) {
+            return false;
+        }
+        if (password.length() < 8) {
+            return false;
+        }
 
-        return true;
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                hasUpper = true;
+            } else if (Character.isLowerCase(c)) {
+                hasLower = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            } else if ("!@#$%^&*()_+[]{}|;:,.<>?/".indexOf(c) >= 0) {
+                hasSpecial = true;
+            }
+        }
+
+        return hasUpper && hasLower && hasDigit && hasSpecial;
     }
 }

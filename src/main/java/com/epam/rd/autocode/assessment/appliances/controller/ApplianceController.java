@@ -67,7 +67,5 @@ public class ApplianceController {
         return "redirect:/appliances";
     }
 
-
-
 }
 

@@ -9,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 public interface ManufacturerService {
     Page<ManufacturerDTO> getAllManufacturers(Pageable pageable);
     Manufacturer createManufacturer(Manufacturer manufacturer);
-    ManufacturerDTO getManufacturerById(Long id);
-    ManufacturerDTO updateManufacturer(Long id, ManufacturerDTO manufacturerDto);
     void deleteManufacturer(Long id);
 
     Page<ManufacturerDTO> searchManufacturers(String search, Pageable pageable);

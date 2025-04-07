@@ -34,14 +34,14 @@ public class OrderServiceImpl implements OrderService {
     private final EmployeeRepository employeeRepository;
 
     @Override
-    /*@PreAuthorize("hasRole('EMPLOYEE')")*/
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public Page<OrdersDTO> getAllOrders(Pageable pageable) {
         Page<Orders> ordersPage = ordersRepository.findAll(pageable);
         return ordersPage.map(ordersDTOMapper);
     }
 
     @Override
-   /* @PreAuthorize("hasRole('EMPLOYEE')")*/
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public Page<OrdersDTO> searchOrders(String search, Pageable pageable) {
         return ordersRepository.findByClient_NameContainingIgnoreCase(search, pageable)
                 .map(ordersDTOMapper);
@@ -55,39 +55,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrdersDTO> searchOrdersForUser(Long clientId, String search, Pageable pageable) {
-        return ordersRepository.findAllByClient_Id(clientId, search, pageable)
-                .map(ordersDTOMapper);
-    }
-
-    @Override
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public void updateEmployeeForOrder(Long orderId, Long employeeId) {
         Orders order = ordersRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
-
         if (employeeId != null) {
-            // Получаем сотрудника по идентификатору
             Employee employee = employeeRepository.findById(employeeId)
                     .orElseThrow(() -> new RuntimeException("Employee not found with id: " + employeeId));
             order.setEmployee(employee);
-        } else {
-            // Если employeeId не передан, сбрасываем сотрудника
+        } else
             order.setEmployee(null);
-        }
 
-        // Сохраняем обновлённый заказ
         ordersRepository.save(order);
     }
 
     @Override
     @Transactional
-    /*@PreAuthorize("hasRole('EMPLOYEE')")*/
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'CLIENT')")
     public Orders createOrder(Orders orders) {
         return ordersRepository.save(orders);
     }
 
     @Override
-    /*@PreAuthorize("hasRole('EMPLOYEE')")*/
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'CLIENT')")
     public OrdersDTO getOrderById(Long id) {
         Orders orders = ordersRepository.findById(id)
                 .orElseThrow(() ->
@@ -96,18 +86,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrdersDTO updateOrder(Long id, OrdersDTO ordersDto) {
-        return null;
-    }
-
-    @Override
-    /*@PreAuthorize("hasRole('EMPLOYEE')")*/
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'CLIENT')")
     public void deleteOrder(Long id) {
         ordersRepository.deleteById(id);
     }
 
     @Override
-    /*@PreAuthorize("hasRole('EMPLOYEE')")*/
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public OrdersDTO approvedOrder(Long id, boolean approved) {
         Orders orders = ordersRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found"));

@@ -2,12 +2,13 @@ package com.epam.rd.autocode.assessment.appliances.controller;
 
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.config.SecurityConfig;
+import com.epam.rd.autocode.assessment.appliances.dto.ClientDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
-import com.epam.rd.autocode.assessment.appliances.password.LoginAttemptService;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +22,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Locale;
@@ -37,7 +36,6 @@ public class IndexController {
 
     private final ClientService clientService;
     private final AuthenticationManager authenticationManager;
-    private final LoginAttemptService loginAttemptService;
 
 
     @Loggable
@@ -63,39 +61,6 @@ public class IndexController {
         }
         return "login";
     }
-
-    /*@PostMapping("/login")
-    public String login(
-            @RequestParam("email") String email,
-            @RequestParam("password") String password,
-            Model model,
-            HttpServletRequest request) {
-
-        // Проверка блокировки
-        if (loginAttemptService.isBlocked(email)) {
-            model.addAttribute("error", "Аккаунт заблокирован! Попробуйте позже.");
-            return "login";
-        }
-
-        try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
-            );
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            loginAttemptService.loginSuccess(email);
-            return "redirect:/";
-
-        } catch (AuthenticationException e) {
-            loginAttemptService.loginFailed(email); // Фиксируем попытку
-
-            // Формируем сообщение
-            int remaining = loginAttemptService.getRemainingAttempts(email);
-            String errorMsg = "Неверные данные. Осталось попыток: " + remaining;
-
-            model.addAttribute("error", errorMsg);
-            return "login";
-        }
-    }*/
 
     @PostMapping("/login")
     public String loginClient(@RequestParam("username") String username,
@@ -126,7 +91,19 @@ public class IndexController {
     }
 
     @PostMapping("/register")
-    public String registerAdd(Client client) {
+    public String registerAdd(@Valid @ModelAttribute("client") ClientDTO clientDTO,
+                              BindingResult bindingResult,  @RequestParam("confirmPassword") String confirmPassword,
+                              Model model) {
+        if (!clientDTO.password().equals(confirmPassword))
+            bindingResult.rejectValue("password", "error.client", "Пароли не совпадают");
+        if (bindingResult.hasErrors())
+            return "register";
+
+        Client client = new Client();
+        client.setName(clientDTO.name());
+        client.setEmail(clientDTO.email());
+        client.setPassword(clientDTO.password());
+        client.setCard(clientDTO.card());
         clientService.createClient(client);
         return "redirect:/login";
     }

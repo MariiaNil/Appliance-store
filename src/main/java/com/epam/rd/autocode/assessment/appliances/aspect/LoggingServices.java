@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 @Aspect
 @Component
 @Slf4j
-/*@EnableAspectJAutoProxy*/
 public class LoggingServices {
 
     @Around("execution(* com.epam.rd.autocode.assessment.appliances.service..*(..)) " +
@@ -37,25 +36,22 @@ public class LoggingServices {
         }
     }
 
-   /* private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Around("@annotation(com.epam.rd.autocode.assessment.appliances.aspect.Loggable)")
+    public Object logMethodCallForLoggable(ProceedingJoinPoint joinPoint) throws Throwable {
+        String methodName = joinPoint.getSignature().toShortString();
+        Object[] args = joinPoint.getArgs();
+        log.info("Starting execution of method: {} with parameters: {}", methodName, args);
 
-    @Before("@annotation(Loggable)")
-    public void logBefore(JoinPoint joinPoint) {
-        logger.info("Entering method: {} with arguments: {} ,Class Name:{}", joinPoint.getSignature().getName(), joinPoint.getArgs(), joinPoint.getSignature().getDeclaringTypeName());
+        long startTime = System.currentTimeMillis();
+        try {
+            Object result = joinPoint.proceed();
+            long duration = System.currentTimeMillis() - startTime;
+            log.info("Method completed: {} in {} ms", methodName, duration);
+            return result;
+        } catch (Throwable ex) {
+            log.error("Error in method: {}. Message: {}", methodName, ex.getMessage());
+            throw ex;
+        }
     }
 
-    @After("@annotation(Loggable)")
-    public void logAfter(JoinPoint joinPoint) {
-        logger.info("Exiting method: {}", joinPoint.getSignature().getName());
-    }
-
-    @AfterThrowing(pointcut = "@annotation(Loggable)", throwing = "ex")
-    public void logAfterThrowing(JoinPoint joinPoint, Exception ex) {
-        logger.error("Exception in {}.{}(): {}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), ex.getMessage());
-    }
-
-    @AfterReturning(pointcut = "@annotation(Loggable)", returning = "result")
-    public void logAfterReturning(JoinPoint joinPoint, Object result) {
-        logger.info("Method {} returned: {}", joinPoint.getSignature().getName(), result);
-    }*/
 }

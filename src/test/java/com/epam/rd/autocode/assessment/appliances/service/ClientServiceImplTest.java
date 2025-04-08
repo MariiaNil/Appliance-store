@@ -17,8 +17,6 @@ import org.springframework.data.domain.*;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -59,7 +57,6 @@ class ClientServiceImplTest {
     void testGetClientByIdFound() {
         Long id = 1L;
         Client client = new Client();
-        // Передаем фиктивные значения для ClientDTO record, например: (id, name, email, card)
         ClientDTO dto = new ClientDTO(1L, "TestClient", "test@example.com", "1234567890", "2223-3333");
         when(clientRepository.findById(id)).thenReturn(Optional.of(client));
         when(clientDTOMapper.apply(client)).thenReturn(dto);

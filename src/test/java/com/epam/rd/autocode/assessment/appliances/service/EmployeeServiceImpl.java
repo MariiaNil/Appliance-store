@@ -56,7 +56,6 @@ class EmployeeServiceImplTest {
     void testGetEmployeeByIdFound() {
         Long id = 1L;
         Employee employee = new Employee();
-        // Фиктивный EmployeeDTO, допустим (id, name, email, department)
         EmployeeDTO dto = new EmployeeDTO(1L, "TestEmployee", "employee@example.com", "TestDepartment", "TestDepartment");
         when(employeeRepository.findById(id)).thenReturn(Optional.of(employee));
         when(employeeDTOMapper.apply(employee)).thenReturn(dto);

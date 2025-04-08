@@ -47,7 +47,6 @@ class OrderServiceImplTest {
     void testGetAllOrders() {
         Pageable pageable = PageRequest.of(0, 5);
         Orders order = new Orders();
-        // Фиктивный OrdersDTO record, например (id, approved) – добавьте остальные параметры если они есть
         OrdersDTO dto = new OrdersDTO( 1L,
                 new ClientDTO(1L, "John", "Doe", "john.doe@example.com", "1234567890"),
                 new EmployeeDTO(2L, "Alice", "Smith", "Manager", "HR"),
@@ -264,7 +263,6 @@ class OrderServiceImplTest {
     void testApprovedOrder() {
         Long orderId = 1L;
         Orders order = new Orders();
-        // Для approvedOrder передадим фиктивное значение для DTO
         OrdersDTO dto = new OrdersDTO( 1L,
                 new ClientDTO(1L, "John", "Doe", "john.doe@example.com", "1234567890"),
                 new EmployeeDTO(2L, "Alice", "Smith", "Manager", "HR"),
@@ -347,7 +345,6 @@ class OrderServiceImplTest {
         when(ordersDTOMapper.apply(order)).thenReturn(dto);
 
         OrdersDTO result = service.addApplianceToOrder(orderId, applianceId, numbers, price);
-        // Проверяем, что OrderRow добавлен
         assertFalse(order.getOrderRowSet().isEmpty());
         verify(ordersRepository).save(order);
         assertEquals(dto, result);

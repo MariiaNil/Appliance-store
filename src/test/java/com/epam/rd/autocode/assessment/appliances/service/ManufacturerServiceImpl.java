@@ -35,7 +35,6 @@ class ManufacturerServiceImplTest {
     void testGetAllManufacturers() {
         Pageable pageable = PageRequest.of(0, 5);
         Manufacturer manufacturer = new Manufacturer();
-        // Фиктивный ManufacturerDTO record (например, id и name)
         ManufacturerDTO dto = new ManufacturerDTO(1L, "TestManufacturer");
         Page<Manufacturer> page = new PageImpl<>(Collections.singletonList(manufacturer));
 

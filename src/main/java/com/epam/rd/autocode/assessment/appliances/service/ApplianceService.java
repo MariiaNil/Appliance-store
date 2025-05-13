@@ -2,6 +2,7 @@ package com.epam.rd.autocode.assessment.appliances.service;
 
 import com.epam.rd.autocode.assessment.appliances.dto.ApplianceDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
+import com.epam.rd.autocode.assessment.appliances.model.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,4 +17,5 @@ public interface ApplianceService {
     List<ApplianceDTO> getAllAppliancesList();
 
     Page<ApplianceDTO> searchAppliances(String search, Pageable pageable);
+    Page<ApplianceDTO> getByCategory(Category category, Pageable pageable);
 }

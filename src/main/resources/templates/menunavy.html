@@ -1,4 +1,111 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="navy">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-0">
+        <div class="container-fluid">
+            <!-- Бренд -->
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+                <i class="fas fa-shopping-cart me-2"></i>
+                <span th:text="#{shop.name}">RammShop</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <!-- Левая часть -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item" sec:authorize="hasRole('EMPLOYEE')">
+                        <a class="nav-link" th:href="@{/clients}">
+                            <i class="fa fa-users me-1"></i>
+                            <span th:text="#{clients.menu.name}">Clients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('EMPLOYEE')">
+                        <a class="nav-link" th:href="@{/employees}">
+                            <i class="fa fa-user-tie me-1"></i>
+                            <span th:text="#{employees.menu.name}">Employees</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('EMPLOYEE')">
+                        <a class="nav-link" th:href="@{/manufacturers}">
+                            <i class="fa fa-industry me-1"></i>
+                            <span th:text="#{manufacturers.menu.name}">Manufacturers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/appliances}">
+                            <i class="fa fa-plug me-1"></i>
+                            <span th:text="#{appliances.menu.name}">Appliances</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories}">
+                            <i class="fa fa-plug me-1"></i>
+                            <span th:text="#{category.menu.name}">Category</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('EMPLOYEE')">
+                        <a class="nav-link" th:href="@{/orders}">
+                            <i class="fa fa-receipt me-1"></i>
+                            <span th:text="#{order.menu.name}">Orders</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Правая часть -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <!-- Язык -->
+                    <li class="nav-item dropdown me-3">
+                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <i class="fa fa-language me-1"></i>
+                            <span th:text="#{lang.select}">Lang</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item" th:href="@{/change-lang?lang=en}">English</a></li>
+                            <li><a class="dropdown-item" th:href="@{/change-lang?lang=uk}">Українська</a></li>
+                        </ul>
+                    </li>
+                    <!-- Незалогиненные -->
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-outline-light me-2" th:href="@{/login}" th:text="#{login.button}">Login</a>
+                    </li>
+                    <!-- Клиент: мои заказы -->
+                    <li class="nav-item" sec:authorize="hasRole('CLIENT')">
+                        <a class="nav-link me-3" th:href="@{/orders/my-orders}">
+                            <i class="fa fa-shopping-basket me-1"></i>
+                            <span th:text="#{my.orders.menu}">My Orders</span>
+                        </a>
+                    </li>
+                    <!-- Залогиненные: имя и выход -->
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user-circle me-1"></i>
+                            <span sec:authentication="name">Username</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item" th:href="@{/logout}" th:text="#{logout.button}">
+                                    <i class="fa fa-sign-out-alt me-1"></i> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+</body>
+</html>
+
+
+
+<!--
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <body>
 <div th:fragment="navy">
@@ -23,7 +130,7 @@
                         <a class="nav-link" th:href="@{/orders}" th:text="#{order.menu.name}"></a>
                     </li>
 
-                    <!-- Блок для неаутентифицированных пользователей -->
+                    &lt;!&ndash; Блок для неаутентифицированных пользователей &ndash;&gt;
                     <li class="nav-item" sec:authorize="!isAuthenticated()">
                         <div class="d-flex">
                             <a class="btn btn-outline-light me-2" th:href="@{/login}" th:text="#{login.button}"></a>
@@ -34,29 +141,29 @@
                         <a class="nav-link" th:href="@{/orders/my-orders}" th:text="#{my.orders.menu}"></a>
                     </li>
 
-                    <!-- Блок для аутентифицированных пользователей -->
+                    &lt;!&ndash; Блок для аутентифицированных пользователей &ndash;&gt;
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <div class="d-flex align-items-center">
                             <span class="text-white me-3" sec:authentication="name"></span>
                             <a class="btn btn-outline-light" th:href="@{/logout}" th:text="#{logout.button}"></a>
                         </div>
                     </li>
-                    <!--&lt;!&ndash; Блок кнопок для регистрации, входа и выхода &ndash;&gt;
+                    &lt;!&ndash;&lt;!&ndash; Блок кнопок для регистрации, входа и выхода &ndash;&gt;
                     <li class="nav-item">
                         <div class="d-flex">
                             <a class="btn btn-outline-light me-2" th:href="@{/login}" th:text="#{login.button}">Вход</a>
-                            <a class="btn btn-outline-light" th:href="@{/logout}" th:text="#{logout.button}">Выход</a>-->
-                    <!-- Выпадающий список для смены языка -->
+                            <a class="btn btn-outline-light" th:href="@{/logout}" th:text="#{logout.button}">Выход</a>&ndash;&gt;
+                    &lt;!&ndash; Выпадающий список для смены языка &ndash;&gt;
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span th:text="#{lang.select}">Language</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <!-- Ссылка для смены языка на английский -->
+                            &lt;!&ndash; Ссылка для смены языка на английский &ndash;&gt;
                             <li><a class="dropdown-item" th:href="@{/change-lang?lang=en}">English</a></li>
-                            <!-- Ссылка для смены языка на французский -->
+                            &lt;!&ndash; Ссылка для смены языка на французский &ndash;&gt;
                             <li><a class="dropdown-item" th:href="@{/change-lang?lang=uk}">Ukraine</a></li>
-                            <!-- Добавьте другие языки, если нужно -->
+                            &lt;!&ndash; Добавьте другие языки, если нужно &ndash;&gt;
                         </ul>
                     </li>
                 </ul>
@@ -72,4 +179,4 @@
     </nav>
 </div>
 </body>
-</html>
+</html>-->

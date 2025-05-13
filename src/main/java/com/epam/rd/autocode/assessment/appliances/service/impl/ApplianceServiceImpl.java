@@ -5,6 +5,7 @@ import com.epam.rd.autocode.assessment.appliances.dto.ApplianceDTO;
 import com.epam.rd.autocode.assessment.appliances.exception.ApplianceNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.mapper.ApplianceDTOMapper;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
+import com.epam.rd.autocode.assessment.appliances.model.Category;
 import com.epam.rd.autocode.assessment.appliances.repository.ApplianceRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import jakarta.annotation.security.PermitAll;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -73,6 +75,12 @@ public class ApplianceServiceImpl implements ApplianceService {
     @PermitAll
     public Page<ApplianceDTO> searchAppliances(String search, Pageable pageable) {
         return applianceRepository.findByNameContainingIgnoreCase(search, pageable)
+                .map(applianceDTOMapper);
+    }
+
+    @Override
+    public Page<ApplianceDTO> getByCategory(Category category, Pageable pageable) {
+        return applianceRepository.findByCategory(category, pageable)
                 .map(applianceDTOMapper);
     }
 }

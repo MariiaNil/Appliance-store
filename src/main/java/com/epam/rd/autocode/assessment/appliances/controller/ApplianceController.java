@@ -37,15 +37,19 @@ public class ApplianceController {
     @GetMapping
     public String listAppliances(
             Model model,
+            @RequestParam(value = "category", required = false) Category category,
             @RequestParam(value = "search", required = false) String search,
-            @PageableDefault(size = 5, sort = {"id", "name", "category", "model", "manufacturer", "powerType", "power", "price"}, direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(size = 8, sort = {"id", "name", "category", "model", "manufacturer", "powerType", "power", "price"}, direction = Sort.Direction.ASC) Pageable pageable) {
         Page<ApplianceDTO> appliancesPage;
-        if (search != null && !search.trim().isEmpty())
+        if (category != null)
+            appliancesPage = applianceService.getByCategory(category, pageable);
+        else if (search != null && !search.trim().isEmpty())
             appliancesPage = applianceService.searchAppliances(search, pageable);
         else
             appliancesPage = applianceService.getAppliances(pageable);
         model.addAttribute("appliancesPage", appliancesPage);
         model.addAttribute("search", search);
+        model.addAttribute("category", category);
         return "appliance/appliances";
     }
 

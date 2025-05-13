@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -63,6 +64,7 @@ public class SecurityConfig {
                 /*.csrf(AbstractHttpConfigurer::disable)*/
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/password/**")
+                        .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"))
                 )
                 .cors(httpSecurityCorsConfigurer ->
                         httpSecurityCorsConfigurer.configurationSource(request ->
@@ -85,7 +87,7 @@ public class SecurityConfig {
                         .requestMatchers("/password/forgot-password", "/password/reset-password/**", "/password/reset-password-success", "/password/reset-password-error").permitAll()
                         .requestMatchers("/employees/**", "/employees/add-employee", "/employees/{id}/delete",
                                 "/clients/**",  "appliances/add", "appliances/add-appliance").hasRole("EMPLOYEE")
-                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/styles/**", "/images/**", "/js/**", "/bootstrap/**", "/categories**").permitAll()
                         .requestMatchers("/orders/my-orders").permitAll()
                         .requestMatchers("/appliances").hasAnyRole( "CLIENT", "EMPLOYEE")
                         .requestMatchers("/favicon.ico").permitAll()

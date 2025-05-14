@@ -12,8 +12,17 @@
 <header>
     <div th:insert="~{menunavy::navy}"></div>
 </header>
+
+<!-- Hero Section -->
+<section class="py-5 bg-dark">
+    <div class="container px-5">
+        <div class="text-center text-white">
+            <h1 class="fw-bolder" th:text="#{page.orders.heading}">Мои заказы</h1>
+        </div>
+    </div>
+</section>
+
 <main class="container mt-3">
-    <h1 th:text="#{page.orders.heading}">Мои заказы</h1>
     <table class="table table-hover">
         <thead>
         <tr class="table-dark">

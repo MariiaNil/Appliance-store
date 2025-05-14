@@ -10,6 +10,16 @@
 <header>
     <div th:insert="~{menunavy::navy}"></div>
 </header>
+
+<!-- Hero Section -->
+<section class="py-5 bg-dark">
+    <div class="container px-5">
+        <div class="text-center text-white">
+            <h1 class="fw-bolder" th:text="#{logout.heading}">Выход</h1>
+        </div>
+    </div>
+</section>
+
 <main class="container d-flex justify-content-center align-items-center" style="height: 80vh;">
     <div class="card p-4 shadow text-center" style="max-width: 400px; width: 100%;">
         <h2 th:text="#{logout.heading}">Выход</h2>

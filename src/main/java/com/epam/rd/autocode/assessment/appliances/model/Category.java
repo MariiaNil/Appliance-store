@@ -1,19 +1,22 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
-/*
-public enum Category {
-    BIG,
-    SMALL
-}
-*/
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public enum Category {
-    BIG,
-    SMALL,
-    WASHING_MACHINES,
-    KITCHEN_STOVES,
-    REFRIGERATORS,
-    COFFEE_MACHINES,
-    MULTIOVENS
-
+@Entity
+@Table(name = "category")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotBlank
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+    private String imageUrl;
 }

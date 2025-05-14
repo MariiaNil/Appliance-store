@@ -13,8 +13,17 @@
 <header>
     <div th:insert="~{menunavy::navy}"></div>
 </header>
+
+<!-- Hero Section -->
+<section class="py-5 bg-dark">
+    <div class="container px-5">
+        <div class="text-center text-white">
+            <h1 class="fw-bolder" th:text="#{appliance.header.list}">Appliances list</h1>
+        </div>
+    </div>
+</section>
+
 <main>
-    <h1 th:text="#{appliance.header.list}">Appliances list</h1>
 
     <th:block th:each="appliance: ${appliances}">
         <form class="store-form" th:action="@{add-into-order}" method="post">

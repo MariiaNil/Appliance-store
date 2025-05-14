@@ -1,7 +1,5 @@
 package com.epam.rd.autocode.assessment.appliances.dto;
 
-import com.epam.rd.autocode.assessment.appliances.model.Category;
-import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
 import com.epam.rd.autocode.assessment.appliances.model.PowerType;
 
 import java.math.BigDecimal;
@@ -9,7 +7,7 @@ import java.math.BigDecimal;
 public record ApplianceDTO(
         Long id,
         String name,
-        Category category,
+        CategoryDTO category,
         String model,
         ManufacturerDTO manufacturer,
         PowerType powerType,

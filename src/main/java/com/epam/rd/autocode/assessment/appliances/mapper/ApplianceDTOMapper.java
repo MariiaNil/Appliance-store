@@ -1,6 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.mapper;
 
 import com.epam.rd.autocode.assessment.appliances.dto.ApplianceDTO;
+import com.epam.rd.autocode.assessment.appliances.dto.CategoryDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ public class ApplianceDTOMapper implements Function<Appliance, ApplianceDTO> {
         return new ApplianceDTO(
                 appliance.getId(),
                 appliance.getName(),
-                appliance.getCategory(),
+                new CategoryDTOMapper().apply(appliance.getCategory()),
                 appliance.getModel(),
                 new ManufacturerDTOMapper().apply(appliance.getManufacturer()),
                 appliance.getPowerType(),

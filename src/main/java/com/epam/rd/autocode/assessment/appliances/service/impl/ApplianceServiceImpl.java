@@ -7,8 +7,10 @@ import com.epam.rd.autocode.assessment.appliances.mapper.ApplianceDTOMapper;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.model.Category;
 import com.epam.rd.autocode.assessment.appliances.repository.ApplianceRepository;
+import com.epam.rd.autocode.assessment.appliances.repository.CategoryRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,7 @@ public class ApplianceServiceImpl implements ApplianceService {
 
     private final ApplianceRepository applianceRepository;
     private final ApplianceDTOMapper applianceDTOMapper;
+    private final CategoryRepository categoryRepository;
 
     @Loggable
     @Override
@@ -79,8 +82,18 @@ public class ApplianceServiceImpl implements ApplianceService {
     }
 
     @Override
-    public Page<ApplianceDTO> getByCategory(Category category, Pageable pageable) {
+    public Page<ApplianceDTO> getByCategory(Long categoryId, Pageable pageable) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityExistsException("Category not fount"));
         return applianceRepository.findByCategory(category, pageable)
                 .map(applianceDTOMapper);
     }
+
+
+
+    /*@Override
+    public Page<ApplianceDTO> getByCategory(Category category, Pageable pageable) {
+        return applianceRepository.findByCategory(category, pageable)
+                .map(applianceDTOMapper);
+    }*/
 }

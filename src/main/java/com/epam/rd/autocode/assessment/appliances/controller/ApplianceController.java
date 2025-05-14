@@ -2,11 +2,13 @@ package com.epam.rd.autocode.assessment.appliances.controller;
 
 
 import com.epam.rd.autocode.assessment.appliances.dto.ApplianceDTO;
+import com.epam.rd.autocode.assessment.appliances.dto.CategoryDTO;
 import com.epam.rd.autocode.assessment.appliances.dto.ManufacturerDTO;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.model.Category;
 import com.epam.rd.autocode.assessment.appliances.model.PowerType;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
+import com.epam.rd.autocode.assessment.appliances.service.CategoryService;
 import com.epam.rd.autocode.assessment.appliances.service.ManufacturerService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,10 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,23 +32,31 @@ public class ApplianceController {
 
     private final ApplianceService applianceService;
     private final ManufacturerService manufacturerService;
+    private final CategoryService categoryService;
 
     @GetMapping
     public String listAppliances(
             Model model,
-            @RequestParam(value = "category", required = false) Category category,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
             @RequestParam(value = "search", required = false) String search,
             @PageableDefault(size = 8, sort = {"id", "name", "category", "model", "manufacturer", "powerType", "power", "price"}, direction = Sort.Direction.ASC) Pageable pageable) {
         Page<ApplianceDTO> appliancesPage;
-        if (category != null)
-            appliancesPage = applianceService.getByCategory(category, pageable);
+        if (categoryId != null) {
+            appliancesPage = applianceService.getByCategory(categoryId, pageable);
+            model.addAttribute("selectedCategoryId", categoryId);
+        }
         else if (search != null && !search.trim().isEmpty())
             appliancesPage = applianceService.searchAppliances(search, pageable);
         else
             appliancesPage = applianceService.getAppliances(pageable);
+
+        List<CategoryDTO> allCats = categoryService
+                .getAllCategories(PageRequest.of(0, 10))
+                .getContent();
+
         model.addAttribute("appliancesPage", appliancesPage);
         model.addAttribute("search", search);
-        model.addAttribute("category", category);
+        model.addAttribute("categories", allCats);
         return "appliance/appliances";
     }
 
@@ -58,7 +65,10 @@ public class ApplianceController {
                                        @RequestParam(value = "size", defaultValue = "100") int size) {
         Pageable pageable = PageRequest.of(0, size, Sort.by("id").ascending());
         List<ManufacturerDTO> manufacturerDTO = manufacturerService.getAllManufacturers(pageable).getContent();
-        model.addAttribute("categories", Category.values());
+        List<CategoryDTO> categoriesDTO = categoryService
+                .getAllCategories(PageRequest.of(0, size, Sort.by("name")))
+                .getContent();
+        model.addAttribute("categories", categoriesDTO);
         model.addAttribute("powerTypes", PowerType.values());
         model.addAttribute("manufacturers", manufacturerDTO);
         model.addAttribute("appliance", new Appliance());
@@ -66,7 +76,7 @@ public class ApplianceController {
     }
 
     @PostMapping("/add-appliance")
-    public String addAppliance(Appliance appliance) {
+    public String addAppliance(@ModelAttribute Appliance appliance) {
         applianceService.createAppliance(appliance);
         return "redirect:/appliances";
     }

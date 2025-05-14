@@ -19,10 +19,19 @@
         }
     </style>
 </head>
+
+<!-- Hero Section -->
+<section class="py-5 bg-dark">
+    <div class="container px-5">
+        <div class="text-center text-white">
+            <h1 class="fw-bolder" th:text="#{order.edit.title}">Edit order</h1>
+        </div>
+    </div>
+</section>
+
 <body>
 <div th:insert="~{menunavy::navy}"></div>
 <main class="container mt-4">
-    <h1 class="mb-4" th:text="#{order.edit.title}">Edit order</h1>
 
     <div class="info-section" th:object="${order}">
         <!-- ID -->

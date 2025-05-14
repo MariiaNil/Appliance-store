@@ -20,8 +20,12 @@ public class Appliance {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "category")
+    /*@Column(name = "category")
     @Enumerated(EnumType.STRING)
+    private Category category;*/
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @NotBlank

@@ -17,5 +17,7 @@ public interface ApplianceService {
     List<ApplianceDTO> getAllAppliancesList();
 
     Page<ApplianceDTO> searchAppliances(String search, Pageable pageable);
-    Page<ApplianceDTO> getByCategory(Category category, Pageable pageable);
+
+    Page<ApplianceDTO> getByCategory(Long categoryId, Pageable pageable);
+//    Page<ApplianceDTO> getByCategory(Category category, Pageable pageable);
 }

@@ -18,3 +18,35 @@
     background-color: #fff;   /* если у картинки прозрачность */
     border-top: 10px solid #fff;
 }
+.category-img-container {
+    height: 250px;
+    padding: 15px; /* Отступы от краев карточки */
+    border: 1px solid #f0f0f0; /* Светлая граница */
+    border-radius: 6px; /* Скругление углов */
+    margin: 10px; /* Отступ от других элементов */
+    background: white;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    padding: 5px; /* Воздух вокруг изображения */
+    border: 1px solid #f8f9fa; /* Очень светлая граница */
+    border-radius: 4px; /* Мягкое скругление */
+    box-sizing: border-box; /* Учитываем границы в общей ширине */
+}
+
+.card {
+    border: 1px solid #e0e0e0 !important; /* Общая граница карточки */
+    transition: transform 0.2s; /* Анимация при наведении */
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Эффект поднятия */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Тень для глубины */
+}

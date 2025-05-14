@@ -12,8 +12,17 @@
 <header>
     <div th:insert="~{menunavy::navy}"></div>
 </header>
+
+<!-- Hero Section -->
+<section class="py-5 bg-dark">
+    <div class="container px-5">
+        <div class="text-center text-white">
+            <h1 class="fw-bolder" th:text="#{orders.header.list}">Orders list</h1>
+        </div>
+    </div>
+</section>
+
 <main class="container mt-3">
-    <h1 th:text="#{orders.header.list}">Orders list</h1>
 
     <!-- Форма поиска -->
     <form th:action="@{/orders}" method="get" class="mb-3">

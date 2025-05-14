@@ -85,7 +85,39 @@ public class ApplianceController {
         return "appliance/newAppliance";
     }
 
+
     @PostMapping("/add-appliance")
+    public String addAppliance(@ModelAttribute Appliance appliance,
+                               @RequestParam("categoryId")   Long categoryId,
+                               @RequestParam("manufacturerId") Long manufacturerId,
+                               @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+
+        categoryService.getById(categoryId).ifPresent(appliance::setCategory);
+        manufacturerService.getById(manufacturerId).ifPresent(appliance::setManufacturer);
+
+        Appliance saved = applianceService.createAppliance(appliance);
+
+        if (!imageFile.isEmpty()) {
+            String original = imageFile.getOriginalFilename();
+            String ext = original.contains(".")
+                    ? original.substring(original.lastIndexOf('.') + 1)
+                    : "jpg";
+            String filename = saved.getId() + "." + ext;
+            Path uploadPath = Paths.get(uploadDir);
+            if (Files.notExists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            try (InputStream in = imageFile.getInputStream()) {
+                Files.copy(in, uploadPath.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            }
+            saved.setImageUrl("/images/appliances/" + filename);
+            applianceService.createAppliance(saved);
+        }
+
+        return "redirect:/appliances";
+    }
+
+    /*@PostMapping("/add-appliance")
     public String addAppliance(
             @ModelAttribute Appliance appliance,
             @RequestParam("categoryId")   Long categoryId,
@@ -111,7 +143,7 @@ public class ApplianceController {
         manufacturerService.getById(manufacturerId).ifPresent(appliance::setManufacturer);
         applianceService.createAppliance(appliance);
         return "redirect:/appliances";
-    }
+    }*/
 
     /*@PostMapping("/add-appliance")
     public String addAppliance(@ModelAttribute Appliance appliance) {

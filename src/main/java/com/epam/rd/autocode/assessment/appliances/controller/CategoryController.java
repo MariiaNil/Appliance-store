@@ -52,6 +52,30 @@ public class CategoryController {
     }
 
     @PostMapping("/add-category")
+    public String createCategory(@ModelAttribute Category category,
+                                 @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+        Category saved = categoryService.createCategory(category);
+
+        if (!imageFile.isEmpty()) {
+            String original = imageFile.getOriginalFilename();
+            String ext = original.contains(".")
+                    ? original.substring(original.lastIndexOf('.') + 1)
+                    : "jpg";
+            String filename = saved.getId() + "." + ext;
+            Path uploadPath = Paths.get(uploadDir);
+            if (Files.notExists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            try (InputStream in = imageFile.getInputStream()) {
+                Files.copy(in, uploadPath.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            }
+            saved.setImageUrl("/images/categories/" + filename);
+            categoryService.createCategory(saved);
+        }
+        return "redirect:/categories";
+    }
+
+    /*@PostMapping("/add-category")
     public String createCategory(@ModelAttribute(name = "category") CategoryDTO categoryDTO,
                                  @RequestParam("imageFile") MultipartFile imageFile) {
 
@@ -78,7 +102,7 @@ public class CategoryController {
 
         categoryService.createCategory(category);
         return "redirect:/categories";
-    }
+    }*/
 
 
 

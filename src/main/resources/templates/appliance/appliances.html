@@ -48,11 +48,12 @@
                          style="height: 250px;">
                         <!--"card-img-top bg-white p-2 border-top"-->
                         <img class= "img-fluid" style="object-fit: contain; width: 100%; height: 200px;"
-                             th:src="@{/images/appliances/{id}.jpg(id=${appliance.id})}"
+                                th:src="@{/images/appliances/{id}.jpg(id=${appliance.id})}"
                              th:alt="${appliance.name}"
                              th:attr="onerror=|this.onerror=null;this.src='@{/images/placeholder.png}';|"
                         />
                     </div>
+                    <!--th:src="@{/images/appliances/{id}.jpg(id=${appliance.id})}"-->
 
                     <!-- Тело карточки -->
                     <div class="card-body p-4 text-center flex-grow-0">

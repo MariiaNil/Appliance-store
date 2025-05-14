@@ -21,7 +21,8 @@ public class ApplianceDTOMapper implements Function<Appliance, ApplianceDTO> {
                 appliance.getCharacteristic(),
                 appliance.getDescription(),
                 appliance.getPower(),
-                appliance.getPrice()
+                appliance.getPrice(),
+                appliance.getImageUrl()
         );
     }
 }

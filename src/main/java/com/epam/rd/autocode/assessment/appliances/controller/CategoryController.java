@@ -63,7 +63,7 @@ public class CategoryController {
                 Files.createDirectories(uploadPath);
             try (InputStream in = imageFile.getInputStream()) {
                 Files.copy(in, uploadPath.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-            } catch (java.io.IOException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } catch (IOException e) {

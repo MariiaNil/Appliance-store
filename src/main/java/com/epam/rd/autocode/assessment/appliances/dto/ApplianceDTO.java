@@ -14,6 +14,7 @@ public record ApplianceDTO(
         String characteristic,
         String description,
         Integer power,
-        BigDecimal price
+        BigDecimal price,
+        String imageUrl
         )
 { }

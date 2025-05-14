@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +39,11 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     @Override
     public void deleteManufacturer(Long id) {
         manufacturerRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Manufacturer> getById(Long id) {
+        return manufacturerRepository.findById(id);
     }
 
     @Override

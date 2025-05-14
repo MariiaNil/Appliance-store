@@ -20,8 +20,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Controller
@@ -33,6 +41,7 @@ public class ApplianceController {
     private final ApplianceService applianceService;
     private final ManufacturerService manufacturerService;
     private final CategoryService categoryService;
+    private final String uploadDir = "./uploads/images/appliances/";
 
     @GetMapping
     public String listAppliances(
@@ -63,6 +72,7 @@ public class ApplianceController {
     @GetMapping("/add")
     public String showAddApplianceForm(Model model,
                                        @RequestParam(value = "size", defaultValue = "100") int size) {
+
         Pageable pageable = PageRequest.of(0, size, Sort.by("id").ascending());
         List<ManufacturerDTO> manufacturerDTO = manufacturerService.getAllManufacturers(pageable).getContent();
         List<CategoryDTO> categoriesDTO = categoryService
@@ -76,10 +86,38 @@ public class ApplianceController {
     }
 
     @PostMapping("/add-appliance")
-    public String addAppliance(@ModelAttribute Appliance appliance) {
+    public String addAppliance(
+            @ModelAttribute Appliance appliance,
+            @RequestParam("categoryId")   Long categoryId,
+            @RequestParam("manufacturerId") Long manufacturerId,
+            @RequestParam("imageFile")    MultipartFile imageFile
+    ) {
+        String filename = StringUtils.cleanPath(imageFile.getOriginalFilename());
+        Path uploadPath = Paths.get(uploadDir);
+        try {
+            if (Files.notExists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            try (InputStream in = imageFile.getInputStream()) {
+                Files.copy(in,
+                        uploadPath.resolve(filename),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to save appliance image", ex);
+        }
+        appliance.setImageUrl("/images/appliances/" + filename);
+        categoryService.getById(categoryId).ifPresent(appliance::setCategory);
+        manufacturerService.getById(manufacturerId).ifPresent(appliance::setManufacturer);
         applianceService.createAppliance(appliance);
         return "redirect:/appliances";
     }
+
+    /*@PostMapping("/add-appliance")
+    public String addAppliance(@ModelAttribute Appliance appliance) {
+        applianceService.createAppliance(appliance);
+        return "redirect:/appliances";
+    }*/
 
 }
 

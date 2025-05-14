@@ -87,9 +87,9 @@ public class SecurityConfig {
                         .requestMatchers("/password/forgot-password", "/password/reset-password/**", "/password/reset-password-success", "/password/reset-password-error").permitAll()
                         .requestMatchers("/employees/**", "/employees/add-employee", "/employees/{id}/delete",
                                 "/clients/**",  "appliances/add", "appliances/add-appliance", "categories/add", "categories/add-category").hasRole("EMPLOYEE")
-                        .requestMatchers("/h2-console/**", "/styles/**", "/images/**", "/js/**", "/bootstrap/**", "/categories**", "/uploads/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/styles/**", "/images/**", "/js/**", "/bootstrap/**", "/categories**", "/uploads/**", "/appliances").permitAll()
                         .requestMatchers("/orders/my-orders").permitAll()
-                        .requestMatchers("/appliances").hasAnyRole( "CLIENT", "EMPLOYEE")
+                        /*.requestMatchers("/appliances").hasAnyRole( "CLIENT", "EMPLOYEE")*/
                         .requestMatchers("/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 /*.userDetailsService(customUserService)*/

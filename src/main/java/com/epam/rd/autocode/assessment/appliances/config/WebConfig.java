@@ -10,7 +10,15 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        // URL /images/categories/** будем искать и в classpath:/static/images/categories/,
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations(
+                        "classpath:/static/images/",    // для «затаренных» в JAR
+                        "file:./uploads/images/"        // для динамически загруженных
+                );
+
+    }
+
+       /* // URL /images/categories/** будем искать и в classpath:/static/images/categories/,
         // и в локальной папке uploads/images/categories/
         registry.addResourceHandler("/images/categories/**")
                 .addResourceLocations(
@@ -22,8 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations(
                         "classpath:/static/images/appliances/",
                         "file:./uploads/images/appliances/"
-                );
-    }
+                );*/
        /* // 1) чтобы статика из src/main/resources/static работала как прежде:
         registry
                 .addResourceHandler("/css/**", "/js/**", "/images/**")

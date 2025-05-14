@@ -49,4 +49,6 @@ public class Appliance {
     private Integer power;
     @Column(name = "price")
     private BigDecimal price;
+    @Column(name = "image_url")
+    private String imageUrl;
 }

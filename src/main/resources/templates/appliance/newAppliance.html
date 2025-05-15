@@ -80,16 +80,27 @@
         <!-- Characteristic -->
         <div class="col-md-6">
             <label class="form-label" th:text="#{object.appliance.characteristic}">Characteristic</label>
-            <input type="text" th:field="*{characteristic}" class="form-control"/>
-            <div class="text-danger" th:if="${#fields.hasErrors('characteristic')}" th:errors="*{characteristic}"></div>
+            <textarea th:field="*{characteristic}"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Enter detailed characteristics…"></textarea>
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('characteristic')}"
+                 th:errors="*{characteristic}"></div>
         </div>
 
         <!-- Description -->
         <div class="col-md-6">
             <label class="form-label" th:text="#{object.appliance.description}">Description</label>
-            <input type="text" th:field="*{description}" class="form-control"/>
-            <div class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+            <textarea th:field="*{description}"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Enter detailed description…"></textarea>
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('description')}"
+                 th:errors="*{description}"></div>
         </div>
+
 
         <!-- Power -->
         <div class="col-md-6">

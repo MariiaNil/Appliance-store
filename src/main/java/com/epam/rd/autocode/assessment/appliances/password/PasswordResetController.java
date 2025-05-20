@@ -57,10 +57,10 @@ public class PasswordResetController {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(client.getEmail());
         message.setSubject("Сброс пароля");
-        message.setText("Перейдите по следующей ссылке для сброса пароля: " + resetLink);
+        message.setText("Перейдіть за наступним посиланням для скидання пароля: " + resetLink);
         mailSender.send(message);
 
-        model.addAttribute("message", "Письмо с инструкцией отправлено на ваш email.");
+        model.addAttribute("message", "Лист з інструкцією надіслано на ваш email.");
         return "/password/forgot-password";
     }
 

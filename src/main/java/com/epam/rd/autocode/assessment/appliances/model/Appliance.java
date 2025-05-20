@@ -40,9 +40,11 @@ public class Appliance {
     @Enumerated(EnumType.STRING)
     private PowerType powerType;
 
-    @Column(name = "characteristic")
+    @Lob
+    @Column(name = "characteristic", columnDefinition = "CLOB")
     private String characteristic;
-    @Column(name = "description")
+    @Lob
+    @Column(name = "description", columnDefinition = "CLOB")
     private String description;
     @Min(1)
     @Column(name = "power")

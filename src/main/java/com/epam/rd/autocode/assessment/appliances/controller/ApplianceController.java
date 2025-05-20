@@ -117,6 +117,25 @@ public class ApplianceController {
         return "redirect:/appliances";
     }
 
+
+    @GetMapping("/{id}")
+    public String showApplianceDetail(@PathVariable Long id, Model model) {
+        ApplianceDTO appliance = applianceService.getApplianeById(id);
+        model.addAttribute("appliance", appliance);
+        return "appliance/applianceDetail";
+    }
+
+    /*
+    * Сделать сортировку по производителю на странице еплаинс
+    * Реализовать окно просмотра товара
+    * Переделать дмл для аплаинс
+    * Сделать отображение цены в грн
+    * Переделать заглавную страницу (добавить категории, и товары)
+    * Поправить футтер
+    * Дополнительно: (оптимизировать бд для большой информации)
+    *                поправить поиск по категории*/
+
+
     /*@PostMapping("/add-appliance")
     public String addAppliance(
             @ModelAttribute Appliance appliance,

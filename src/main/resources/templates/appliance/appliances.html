@@ -71,11 +71,14 @@
                                    class="form-control form-control-sm" style="width: 60px;"/>
                             <button class="btn btn-outline-dark" type="submit">Add to cart</button>
                         </form>
-                        <a th:unless="${#authorization.expression('hasRole(''CLIENT'')')}"
-                           th:href="@{/appliances/{id}(id=${appliance.id})}"
-                           class="btn btn-outline-dark">
-                            View options
-                        </a>
+                        <!--th:unless="${#authorization.expression('hasRole(''CLIENT'')')}"-->
+                        <br>
+                        <div class="d-flex justify-content-center align-items-center gap-2">
+                            <a th:href="@{/appliances/{id}(id=${appliance.id})}"
+                               class="btn btn-outline-dark">
+                                View options
+                            </a>
+                        </div>
                     </div>
 
                 </div>

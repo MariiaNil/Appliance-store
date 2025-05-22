@@ -1,7 +1,7 @@
 INSERT INTO manufacturer (name) VALUES ('Samsung');
-INSERT INTO manufacturer (name) VALUES ('Dell');
-INSERT INTO manufacturer (name) VALUES ('HP');
-INSERT INTO manufacturer (name) VALUES ('Apple');
-INSERT INTO manufacturer (name) VALUES ('Lenovo');
-INSERT INTO manufacturer (name) VALUES ('Acer');
-INSERT INTO manufacturer (name) VALUES ('AMD');
+INSERT INTO manufacturer (name) VALUES ('ELECTROLUX');
+INSERT INTO manufacturer (name) VALUES ('LG');
+INSERT INTO manufacturer (name) VALUES ('PHILIPS');
+INSERT INTO manufacturer (name) VALUES ('BRAUN');
+INSERT INTO manufacturer (name) VALUES ('BEKO');
+INSERT INTO manufacturer (name) VALUES ('DeLonghi');
